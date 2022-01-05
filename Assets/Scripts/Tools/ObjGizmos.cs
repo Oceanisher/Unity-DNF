@@ -6,10 +6,8 @@ using UnityEngine;
 namespace Tools
 {
     //Editor的Gizmos工具，主要用来绘制一些图形
-    public class ObjGizmos
+    public static class ObjGizmos
     {
-        private ObjGizmos() {}
-        
         //绘制Box外框
         public static void DrawActiveBox(BoxCollider2D[] boxArray)
         {
@@ -25,7 +23,7 @@ namespace Tools
         }
         
         //绘制Box外框
-        public static void DrawActiveBox(BoxCollider2D box)
+        private static void DrawActiveBox(BoxCollider2D box)
         {
             if (!box.isActiveAndEnabled || !box.gameObject.activeInHierarchy)
             {
@@ -36,7 +34,7 @@ namespace Tools
             ColliderExtend extend = box.gameObject.GetComponent<ColliderExtend>();
             if (null == extend)
             {
-                LogUtil.Error($"[ObjGizmos]Ojb:{box.gameObject.name}有碰撞器、没有碰撞器扩展。");
+                Log.Error($"[ObjGizmos]Ojb:{box.gameObject.name}有碰撞器、没有碰撞器扩展。");
                 return;
             }
             
@@ -72,7 +70,7 @@ namespace Tools
                case ColliderType.Entity:
                    return Color.green;
             }
-            LogUtil.Error($"[ObjGizmos]ColliderType:{type}类型没有对应的颜色。");
+            Log.Error($"[ObjGizmos]ColliderType:{type}类型没有对应的颜色。");
             return Color.black;
         }
 

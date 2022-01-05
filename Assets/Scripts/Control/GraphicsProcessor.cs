@@ -11,6 +11,7 @@ using UnityEngine.Events;
 namespace Control
 {
     //动画处理单元
+    [Obsolete]
     public class GraphicsProcessor : MonoBehaviour
     {
         //动画完成回调

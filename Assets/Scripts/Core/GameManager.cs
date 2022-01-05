@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Control;
@@ -7,6 +8,7 @@ using UnityEngine;
 namespace Core
 {
     //游戏核心管理器
+    [Obsolete]
     public class GameManager : MonoSingleton<GameManager>
     {
         //游戏状态，默认城镇中状态

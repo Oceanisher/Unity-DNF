@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Control
 {
     //精灵单元，处理精灵切换
+    [Obsolete]
     public class SpriteUnit : MonoBehaviour
     {
         [Header("精灵文件夹路径")]

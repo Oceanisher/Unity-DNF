@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 
 namespace Core
 {
     //场景类型
+    [Obsolete]
     public enum SceneType
     {
         None,//无

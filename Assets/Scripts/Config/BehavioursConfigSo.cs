@@ -7,6 +7,7 @@ using UnityEngine;
 namespace Config
 {
     //行为集合配置
+    [Obsolete]
     [CreateAssetMenu(menuName = "Config/Ani&Phy/Behaviours", fileName = "Behaviours")]
     public class BehavioursConfigSo : ScriptableObject
     {

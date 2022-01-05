@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc26f2e005b47079e300aabbf8cca44, type: 3}
+  m_Name: WalkActionSo
+  m_EditorClassIdentifier: 
+  actionName: "\u9B3C\u5251\u58EB-\u8D70"
+  loopType: 2
+  changeLimit: 1
+  actionDisplacement:
+    list: []
+  actionFrame:
+    canFreeze: 0
+    aniFrameInfos:
+    - spriteSequence: 180
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 181
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 182
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 183
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 184
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 185
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 186
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 187
+      aniFrameAudio: {fileID: 0}
+    breakLimits:
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 1
+      condition: 1
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 2
+      condition: 1
+    orientationLimits:
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 1
+      condition: 2
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 2
+      condition: 3
+    switchLimits:
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      switchType: 5
+      switchOptType: 2
+      time: 100
+      timeKeys:
+      - timeKey: 2
+        timeKeyStateList: 0100000002000000
+      - timeKey: 3
+        timeKeyStateList: 0100000002000000
+      - timeKey: 4
+        timeKeyStateList: 0100000002000000
+      - timeKey: 5
+        timeKeyStateList: 0100000002000000
+      conditionLimit: 0
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      switchType: 3
+      switchOptType: 1
+      time: 100
+      timeKeys: []
+      conditionLimit: 0
+    destroyLimits: []
+  hasLinkage: 0
+  linkage:
+    switchLimit:
+      frameIndexes: 
+      switchType: 0
+      switchOptType: 0
+      time: 0
+      timeKeys: []
+      conditionLimit: 0
+    linkageAction: {fileID: 0}

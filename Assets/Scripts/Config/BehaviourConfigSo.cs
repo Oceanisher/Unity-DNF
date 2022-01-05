@@ -9,6 +9,7 @@ using UnityEngine.Serialization;
 namespace Config
 {
     //行为配置
+    [Obsolete]
     [CreateAssetMenu(menuName = "Config/Ani&Phy/Behaviour", fileName = "Behaviour")]
     public class BehaviourConfigSo : ScriptableObject
     {
@@ -93,20 +94,5 @@ namespace Config
         None,//无
         Once,//一次性
         Loop,//循环
-    }
-
-    //动画精灵类型
-    public enum AniSpriteType
-    {
-        None,//无
-        Body,//主身体
-        SkinHair,//皮肤-头发
-        SkinChest,//皮肤-胸
-        SkinShoots,//皮肤-鞋
-        SkinShoots2,//皮肤-鞋2
-        SkinLegs,//皮肤-腿
-        SkinLegs2,//皮肤-腿2
-        SkinWeapon,//皮肤-武器
-        SkinWeapon2,//皮肤-武器2
     }
 }

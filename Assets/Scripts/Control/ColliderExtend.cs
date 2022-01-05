@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 namespace Core
 {
     //碰撞器扩展
+    [Obsolete]
     [RequireComponent(typeof(Collider2D))]
     public class ColliderExtend : MonoBehaviour
     {

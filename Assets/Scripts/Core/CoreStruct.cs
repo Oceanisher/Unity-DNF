@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Core
 {
     //按键信息，主要附加一些额外的信息
+    [Obsolete]
     public struct KeyInfo
     {
         //按键

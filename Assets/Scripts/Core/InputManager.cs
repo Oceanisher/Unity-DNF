@@ -10,6 +10,7 @@ using UnityEngine.Events;
 namespace Core
 {
     //输入监听
+    [Obsolete]
     public class InputManager : MonoSingleton<InputManager>
     {
         [Header("默认输入监听配置")]
@@ -40,7 +41,7 @@ namespace Core
             //TODO 用户自定义按键
             if (null == defaultInputSO)
             {
-                LogUtil.Error("[InputManager]默认按键配置缺失。");
+                Log.Error("[InputManager]默认按键配置缺失。");
                 return;
             }
 

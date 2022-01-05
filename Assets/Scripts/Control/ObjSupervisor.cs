@@ -10,6 +10,7 @@ using UnityEngine;
 namespace Control
 {
     //物体管理器类
+    [Obsolete]
     public class ObjSupervisor : MonoBehaviour
     {
         [Header("角色类型")]

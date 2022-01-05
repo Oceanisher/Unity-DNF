@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core;
@@ -6,6 +7,7 @@ using UnityEngine;
 namespace Config
 {
     //输入配置
+    [Obsolete]
     [CreateAssetMenu(menuName = "Config/Input", fileName = "InputConfig")]
     public class InputConfigSo : ScriptableObject
     {
