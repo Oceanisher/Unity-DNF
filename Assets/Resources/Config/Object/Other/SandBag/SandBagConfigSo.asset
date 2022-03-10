@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6d7e0f9b544098ae6100fd1743b32c, type: 3}
+  m_Name: SandBagConfigSo
+  m_EditorClassIdentifier: 
+  properties: {fileID: 4900000, guid: 98a5bab151b4847e5b8910e6f0714592, type: 3}
+  graphics:
+    positiveOrientation: 1
+    ppu: 100
+    spriteCount: 57
+    hasSkin: 0
+    bodyPath: Sprites/Character/SandBag/Body
+    skinPath: 
+    skinUseList: 01000000
+    offset: {x: 270, y: 385}
+    bodyOffsetTxt: {fileID: 4900000, guid: b05d612b9d78d4ee4bc03419077d1dfc, type: 3}
+    hairOffsetTxt: {fileID: 0}
+    chestOffsetTxt: {fileID: 0}
+    shootsOffsetTxt: {fileID: 0}
+    shoots2OffsetTxt: {fileID: 0}
+    legsOffsetTxt: {fileID: 0}
+    legs2OffsetTxt: {fileID: 0}
+    weaponOffsetTxt: {fileID: 0}
+    weapon2OffsetTxt: {fileID: 0}
+  allActions:
+  - {fileID: 11400000, guid: 5eaeaf049f1254272a6f6e10d1249cc1, type: 2}
+  keyTypeInputMap: []

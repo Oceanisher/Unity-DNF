@@ -1,0 +1,186 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc26f2e005b47079e300aabbf8cca44, type: 3}
+  m_Name: DropActionSo
+  m_EditorClassIdentifier: 
+  actionName: "\u9B3C\u5251\u58EB-\u4E0B\u843D"
+  type: 6
+  uuid: 300100005
+  loopType: 1
+  actionFrame:
+    aniFrameInfos:
+    - spriteSequence: 127
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 130
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 132
+      aniFrameAudio: {fileID: 0}
+    frameSwitchConditions:
+    - frameIndexes: 00000000
+      type: 6
+      time:
+        time: 0
+      timeOrKey:
+        time: 0
+        keys: []
+      timeOrKeyInvalid:
+        time: 0
+        keys: []
+      key:
+        keys: []
+      keyInvalid:
+        keys: []
+      fallPercent:
+        percent: 20
+    - frameIndexes: 01000000
+      type: 6
+      time:
+        time: 0
+      timeOrKey:
+        time: 0
+        keys: []
+      timeOrKeyInvalid:
+        time: 0
+        keys: []
+      key:
+        keys: []
+      keyInvalid:
+        keys: []
+      fallPercent:
+        percent: 80
+    breakLimits: []
+    orientationLimits:
+    - frameIndexes: 000000000100000002000000
+      type: 1
+      key:
+        keyLimits:
+        - key: 2
+          keyStateList: 01000000020000000400000005000000
+        orientation: 1
+    - frameIndexes: 000000000100000002000000
+      type: 1
+      key:
+        keyLimits:
+        - key: 3
+          keyStateList: 01000000020000000400000005000000
+        orientation: 2
+    destroyLimits: []
+  actionDisplacement:
+    infos:
+    - frameSequence: 000000000100000002000000
+      type: 2
+      move:
+        velocityType: 0
+        orientationType: 0
+      moveKeyHold:
+        velocityType: 1
+        orientationType: 3
+        keys:
+        - key: 3
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+    - frameSequence: 000000000100000002000000
+      type: 2
+      move:
+        velocityType: 0
+        orientationType: 0
+      moveKeyHold:
+        velocityType: 1
+        orientationType: 4
+        keys:
+        - key: 2
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+    - frameSequence: 000000000100000002000000
+      type: 2
+      move:
+        velocityType: 0
+        orientationType: 0
+      moveKeyHold:
+        velocityType: 1
+        orientationType: 7
+        keys:
+        - key: 4
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+    - frameSequence: 000000000100000002000000
+      type: 2
+      move:
+        velocityType: 0
+        orientationType: 0
+      moveKeyHold:
+        velocityType: 1
+        orientationType: 8
+        keys:
+        - key: 5
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+    - frameSequence: 000000000100000002000000
+      type: 4
+      move:
+        velocityType: 0
+        orientationType: 0
+      moveKeyHold:
+        velocityType: 1
+        orientationType: 8
+        keys:
+        - key: 5
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 5
+      fall:
+        accelerate: 0
+  actionOther:
+    actionStopCondition:
+    - frameIndexes: 000000000100000002000000
+      type: 3
+      keyInvalid:
+        keys: []
+    hasLinkage: 0
+    linkage:
+      switchLimit:
+        frameIndexes: 
+        switchType: 0
+        switchOptType: 0
+        time: 0
+        timeKeys: []
+        conditionLimitMeter: 0
+        conditionLimitVelocity: 0
+        conditionPercent: 0
+      linkageAction: {fileID: 0}

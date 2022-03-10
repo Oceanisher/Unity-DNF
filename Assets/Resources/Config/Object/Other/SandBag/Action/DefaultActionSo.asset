@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc26f2e005b47079e300aabbf8cca44, type: 3}
+  m_Name: DefaultActionSo
+  m_EditorClassIdentifier: 
+  actionName: "\u6C99\u888B-\u9ED8\u8BA4"
+  type: 1
+  subType: 0
+  uuid: 300101001
+  loopType: 2
+  actionFrame:
+    aniFrameInfos:
+    - spriteSequence: 0
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 1
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 2
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 3
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 4
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 5
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 6
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 7
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 8
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 9
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 10
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 11
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 12
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 13
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 14
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 15
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 16
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 17
+      aniFrameAudio: {fileID: 0}
+    frameSwitchConditions:
+    - frameIndexes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+      type: 1
+      time:
+        time: 100
+      timeOrKey:
+        time: 0
+        keys: []
+      timeOrKeyInvalid:
+        time: 0
+        keys: []
+      key:
+        keys: []
+      keyInvalid:
+        keys: []
+      fallPercent:
+        percent: 0
+    breakLimits: []
+    orientationLimits: []
+    destroyLimits: []
+  actionPhysics:
+    infos:
+    - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+      box:
+        frameConfig:
+        - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+          offset: {x: -0.6412871, y: 1.026059}
+          size: {x: 0.6250938, y: 1.513029}
+        orientationSensitive: 1
+        colPos: 2
+        colJudgeType: 3
+  actionDisplacement:
+    infos: []
+  actionOther:
+    actionStopCondition: []
+    linkage:
+      condition:
+        type: 0
+        timeLimitSame:
+          startFrame: 0
+          time: 0
+      linkageAction: {fileID: 0}

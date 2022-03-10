@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using New.Tools;
 using UnityEngine;
 
 namespace Tools
@@ -39,7 +38,7 @@ namespace Tools
         //重复创建销毁
         private void DestroySelf()
         {
-            Log.Error($"[MonoSingleton]单例:{typeof(T)}不可二次创建。");
+            Log.Error($"[MonoSingleton]单例:{typeof(T)}不可二次创建。", LogModule.Tool);
             Destroy(gameObject);
         }
     }

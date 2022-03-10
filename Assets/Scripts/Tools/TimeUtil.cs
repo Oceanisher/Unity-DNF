@@ -27,5 +27,11 @@ namespace Tools
         {
             return Time.deltaTime * 1000;
         }
+
+        //获取Time.deltaTime时间，秒数
+        public static float DeltaTime()
+        {
+            return Time.deltaTime;
+        }
     }
 }

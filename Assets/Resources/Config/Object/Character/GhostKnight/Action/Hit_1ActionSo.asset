@@ -1,0 +1,183 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc26f2e005b47079e300aabbf8cca44, type: 3}
+  m_Name: Hit_1ActionSo
+  m_EditorClassIdentifier: 
+  actionName: "\u9B3C\u5251\u58EB-\u666E\u653B1"
+  type: 8
+  subType: 1
+  uuid: 300100006
+  loopType: 1
+  actionFrame:
+    aniFrameInfos:
+    - spriteSequence: 0
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 1
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 2
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 3
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 4
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 5
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 6
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 7
+      aniFrameAudio: {fileID: 0}
+    - spriteSequence: 8
+      aniFrameAudio: {fileID: 0}
+    frameSwitchConditions:
+    - frameIndexes: 000000000100000002000000030000000400000005000000060000000700000008000000
+      type: 1
+      time:
+        time: 50
+      timeOrKey:
+        time: 0
+        keys: []
+      timeOrKeyInvalid:
+        time: 0
+        keys: []
+      key:
+        keys: []
+      keyInvalid:
+        keys: []
+      fallPercent:
+        percent: 0
+    breakLimits:
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 1
+      condition: 1
+    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 2
+      condition: 1
+    orientationLimits: []
+    destroyLimits: []
+  actionPhysics:
+    infos:
+    - frameSequence: 030000000400000005000000
+      box:
+        frameConfig:
+        - frameSequence: 03000000
+          offset: {x: 0.6459403, y: 0.690344}
+          size: {x: 1.082006, y: 0.4681466}
+        - frameSequence: 04000000
+          offset: {x: 0.37272, y: 0.3683344}
+          size: {x: 1.179584, y: 0.4291151}
+        - frameSequence: 05000000
+          offset: {x: -0.03223133, y: 0.392729}
+          size: {x: 0.7209644, y: 0.3217788}
+        orientationSensitive: 1
+        colPos: 2
+        colJudgeType: 1
+    - frameSequence: 030000000400000005000000
+      box:
+        frameConfig:
+        - frameSequence: 03000000
+          offset: {x: 0.6215456, y: -0.1244377}
+          size: {x: 1.286921, y: 0.5754831}
+        - frameSequence: 04000000
+          offset: {x: 0.6215456, y: 0.1878139}
+          size: {x: 1.286921, y: 0.4974201}
+        - frameSequence: 05000000
+          offset: {x: 0.05558944, y: 0.1878139}
+          size: {x: 0.7795119, y: 0.4974201}
+        orientationSensitive: 1
+        colPos: 1
+        colJudgeType: 1
+    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+      box:
+        frameConfig:
+        - frameSequence: 000000000100000002000000
+          offset: {x: -0.1219733, y: 0.4683774}
+          size: {x: 0.5023494, y: 1.117094}
+        - frameSequence: 03000000
+          offset: {x: 0.1170943, y: 0.4049513}
+          size: {x: 0.5511384, y: 0.990242}
+        - frameSequence: 04000000050000000600000007000000
+          offset: {x: 0.1902783, y: 0.4049513}
+          size: {x: 0.5413804, y: 0.990242}
+        orientationSensitive: 1
+        colPos: 2
+        colJudgeType: 3
+  actionDisplacement:
+    infos:
+    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 1
+      move:
+        velocityType: 3
+        customVelocity: {x: 0.4, y: 0, z: 0}
+        orientationType: 1
+      moveKeyHold:
+        velocityType: 1
+        customVelocity: {x: 0, y: 0, z: 0}
+        orientationType: 4
+        keys:
+        - key: 2
+          keyStateList: 0100000002000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 2
+      move:
+        velocityType: 3
+        customVelocity: {x: 0.7, y: 0, z: 0}
+        orientationType: 1
+      moveKeyHold:
+        velocityType: 3
+        customVelocity: {x: 0.4, y: 0, z: 0}
+        orientationType: 4
+        keys:
+        - key: 2
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+      type: 2
+      move:
+        velocityType: 3
+        customVelocity: {x: 0.7, y: 0, z: 0}
+        orientationType: 1
+      moveKeyHold:
+        velocityType: 3
+        customVelocity: {x: 0.4, y: 0, z: 0}
+        orientationType: 3
+        keys:
+        - key: 3
+          keyStateList: 01000000020000000400000005000000
+      jump:
+        startVelocity: 0
+        accelerate: 0
+      drop:
+        accelerate: 0
+      fall:
+        accelerate: 0
+  actionOther:
+    actionStopCondition: []
+    linkage:
+      condition:
+        type: 2
+        timeLimitSame:
+          startFrame: 7
+          time: 300
+      linkageAction: {fileID: 11400000, guid: 1df24f60e256645b7816c75c8f6c34f3, type: 2}
