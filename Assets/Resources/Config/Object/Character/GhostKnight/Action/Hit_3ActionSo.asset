@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hit_3ActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u666E\u653B3"
+  actionShowName: "\u666E\u653B3"
   type: 8
   subType: 3
   uuid: 300100008
@@ -79,6 +80,8 @@ MonoBehaviour:
       condition: 1
     orientationLimits: []
     destroyLimits: []
+  actionPhysics:
+    infos: []
   actionDisplacement:
     infos:
     - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000

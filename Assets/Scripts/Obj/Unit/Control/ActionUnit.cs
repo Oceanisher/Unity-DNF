@@ -50,6 +50,7 @@ namespace Obj.Unit.Control
 
         //内部行为相关信息
         private readonly ActionInfo _info = ActionInfo.BuildInit();
+        public ActionInfo Info => _info;
 
         #region 外部开放接口
 
@@ -61,7 +62,7 @@ namespace Obj.Unit.Control
         }
 
         //角色类位移变更
-        public void CharacterDisplacementChange(DisplacementUnit.DisplacementInfo info)
+        public void CharacterDisplacementChange(DisplacementInfo info)
         {
             //检查是否需要从跳->下落
             if (_info.ActiveAction.type == ActionType.CharacterJump
@@ -90,6 +91,30 @@ namespace Obj.Unit.Control
         public void ActionChange_Manual()
         {
             _info.ChangeToManual();
+        }
+
+        //被动碰撞处理
+        public void ColEnterPassive(ColItemInfo info)
+        {
+        }
+
+        //主动碰撞处理
+        public void ColEnterActive(ColItemInfo info)
+        {
+            //如果自身行为是可以顿帧的，并且该帧尚未顿帧过，那么可以进行顿帧
+            if (info.OtherAction.type != _info.ActiveAction.type
+                || info.OtherFrameIndex != _info.ActiveFrameIndex)
+            {
+                return;
+            }
+
+            //该帧已经顿帧过、或正在顿帧中，跳过
+            if (_info.HasFreezeOver || _info.OnFreezeProcess)
+            {
+                return;
+            }
+            
+            _info.FreezeStart();
         }
 
         #endregion
@@ -329,7 +354,7 @@ namespace Obj.Unit.Control
         //状态机帧前处理
         private void PreRunStateMachine()
         {
-            _info.FrameProcessPre();
+            _info.UpdatePre();
         }
 
         //状态机帧后处理
@@ -379,7 +404,7 @@ namespace Obj.Unit.Control
         }
 
         //跳起行为中止检查：该行为是否需要中止
-        private bool CheckActionJumpToFall(DisplacementUnit.DisplacementInfo info)
+        private bool CheckActionJumpToFall(DisplacementInfo info)
         {
             if (_info.ActiveAction.actionOther == null
                 || CollectionUtil.IsEmpty(_info.ActiveAction.actionOther.actionStopCondition))
@@ -405,7 +430,7 @@ namespace Obj.Unit.Control
         }
 
         //下落行为中止检查：该行为是否需要中止
-        private bool CheckActionDropToGround(DisplacementUnit.DisplacementInfo info)
+        private bool CheckActionDropToGround(DisplacementInfo info)
         {
             if (_info.ActiveAction.actionOther == null
                 || CollectionUtil.IsEmpty(_info.ActiveAction.actionOther.actionStopCondition))
@@ -437,13 +462,13 @@ namespace Obj.Unit.Control
         }
 
         //行为中止校验-跳起时到达顶点
-        private bool ActionSwitchJumpToTop(DisplacementUnit.DisplacementInfo info)
+        private bool ActionSwitchJumpToTop(DisplacementInfo info)
         {
             return info.ArriveHighest;
         }
 
         //行为中止校验-下落时到达地面
-        private bool ActionSwitchFallToGround(DisplacementUnit.DisplacementInfo info)
+        private bool ActionSwitchFallToGround(DisplacementInfo info)
         {
             return info.OnGround;
         }
@@ -579,16 +604,18 @@ namespace Obj.Unit.Control
                 }
 
                 bool canNext = false;
+                bool freezeOver = false;
+                //时间类型的需要判断是否需要顿帧
                 switch (item.type)
                 {
                     case FrameSwitchType.Time:
-                        canNext = FrameSwitchTime(item);
+                        canNext = FrameSwitchTime(item) && FreezeTimeCheck(out freezeOver);
                         break;
                     case FrameSwitchType.TimeOrKey:
-                        canNext = FrameSwitchTimeOrKey(item);
+                        canNext = FrameSwitchTimeOrKey(item) && FreezeTimeCheck(out freezeOver);
                         break;
                     case FrameSwitchType.TimeOrKeyInvalid:
-                        canNext = FrameSwitchTimeOrKeyInvalid(item);
+                        canNext = FrameSwitchTimeOrKeyInvalid(item) && FreezeTimeCheck(out freezeOver);
                         break;
                     case FrameSwitchType.Key:
                         canNext = FrameSwitchKey(item);
@@ -597,7 +624,13 @@ namespace Obj.Unit.Control
                         canNext = FrameSwitchKeyInvalid(item);
                         break;
                 }
-
+                
+                //判断是否顿帧结束
+                if (freezeOver)
+                {
+                    _info.FreezeOver();
+                }
+                
                 if (canNext)
                 {
                     return true;
@@ -605,6 +638,21 @@ namespace Obj.Unit.Control
             }
 
             return false;
+        }
+
+        //顿帧检测
+        //freezeOver:是否结束顿帧
+        private bool FreezeTimeCheck(out bool freezeOver)
+        {
+            if (!_info.OnFreezeProcess)
+            {
+                freezeOver = false;
+                return true;
+            }
+
+            //顿帧的持续时间大于配置时间，那么该帧的顿帧时间结束
+            freezeOver = _info.FreezeLastTime > _info.ActiveAction.actionFrame.frameFreezeInfo.time;
+            return freezeOver;
         }
 
         //帧切换校验-时间
@@ -640,7 +688,7 @@ namespace Obj.Unit.Control
         }
 
         //帧切换校验-下落高度百分比
-        private bool FrameSwitchFallPercent(FrameSwitchCondition condition, DisplacementUnit.DisplacementInfo info)
+        private bool FrameSwitchFallPercent(FrameSwitchCondition condition, DisplacementInfo info)
         {
             int percent = info.GetFallPercent();
             if (percent == ActionConstant.InvalidFallPercent)
@@ -841,8 +889,9 @@ namespace Obj.Unit.Control
         }
 
         #endregion
-
-        #region 工具类
+    }
+    
+    #region 工具类
 
         //行为信息
         public class ActionInfo
@@ -892,6 +941,15 @@ namespace Obj.Unit.Control
             //当前行为经过的时间，MS
             public float ActiveActionTime { get; private set; }
 
+            //是否已经在处理顿帧
+            public bool OnFreezeProcess { get; private set; }
+            
+            //该帧是否已经处理顿帧结束
+            public bool HasFreezeOver { get; private set; }
+            
+            //顿帧经过的时间
+            public float FreezeLastTime { get; private set; }
+
             public static ActionInfo BuildInit()
             {
                 ActionInfo info = new ActionInfo();
@@ -910,7 +968,23 @@ namespace Obj.Unit.Control
                 info.ActiveFrameIndex = ActionConstant.InvalidFrameIndex;
                 info.ActiveFrameTime = 0f;
                 info.ActiveActionTime = 0f;
+                info.OnFreezeProcess = false;
+                info.HasFreezeOver = false;
+                info.FreezeLastTime = 0f;
                 return info;
+            }
+
+            //开启顿帧
+            public void FreezeStart()
+            {
+                OnFreezeProcess = true;
+            }
+
+            //完成顿帧
+            public void FreezeOver()
+            {
+                OnFreezeProcess = false;
+                HasFreezeOver = true;
             }
 
             //变更为AI控制
@@ -938,12 +1012,24 @@ namespace Obj.Unit.Control
             }
 
             //帧前处理
-            public void FrameProcessPre()
+            public void UpdatePre()
             {
                 //帧处理
                 ActiveFrameTime += TimeUtil.DeltaTimeMs();
                 ActiveActionTime += TimeUtil.DeltaTimeMs();
                 
+                //顿帧处理
+                if (OnFreezeProcess)
+                {
+                    FreezeLastTime += TimeUtil.DeltaTimeMs();
+                }
+                else
+                {
+                    OnFreezeProcess = false;
+                    HasFreezeOver = false;
+                    FreezeLastTime = 0f;
+                }
+
                 if (!Linkage.HasLinkage)
                 {
                     return;
@@ -990,6 +1076,9 @@ namespace Obj.Unit.Control
                 ActiveFrame = ActiveAction.actionFrame.aniFrameInfos[0];
                 ActiveFrameTime = 0f;
                 ActiveActionTime = 0f;
+                OnFreezeProcess = false;
+                HasFreezeOver = false;
+                FreezeLastTime = 0f;
             }
 
             //下一帧
@@ -1001,6 +1090,9 @@ namespace Obj.Unit.Control
                 ActiveFrameIndex = index;
                 ActiveFrame = ActiveAction.actionFrame.aniFrameInfos[index];
                 ActiveFrameTime = 0f;
+                OnFreezeProcess = false;
+                HasFreezeOver = false;
+                FreezeLastTime = 0f;
             }
 
             //重置到第一帧
@@ -1012,6 +1104,9 @@ namespace Obj.Unit.Control
                 ActiveFrameIndex = 0;
                 ActiveFrame = ActiveAction.actionFrame.aniFrameInfos[0];
                 ActiveFrameTime = 0f;
+                OnFreezeProcess = false;
+                HasFreezeOver = false;
+                FreezeLastTime = 0f;
             }
 
             #region 联动相关方法
@@ -1046,7 +1141,6 @@ namespace Obj.Unit.Control
             }
 
             //是否需要切换到联动行为
-            // public bool CanChange(ActionInfo info, ActionSo currentAction, ActionSo nextAction)
             public bool CanChangeLinkage(ActionSo action)
             {
                 //没有联动、或联动已经处于激活状态，那么不处理
@@ -1115,5 +1209,4 @@ namespace Obj.Unit.Control
         }
 
         #endregion
-    }
 }

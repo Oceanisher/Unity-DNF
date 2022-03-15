@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hit_2ActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u666E\u653B2"
+  actionShowName: "\u666E\u653B2"
   type: 8
   subType: 2
   uuid: 300100007
@@ -67,6 +68,8 @@ MonoBehaviour:
       condition: 1
     orientationLimits: []
     destroyLimits: []
+  actionPhysics:
+    infos: []
   actionDisplacement:
     infos:
     - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a000000

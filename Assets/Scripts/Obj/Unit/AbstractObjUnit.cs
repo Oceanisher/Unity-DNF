@@ -11,7 +11,7 @@ namespace Obj.Unit
         public bool HasInit { get; set; }
         
         //物体核心
-        protected ObjCore Core;
+        public ObjCore Core { get; private set; }
         
         //初始化
         public virtual void Init(ObjCore objCore)

@@ -37,12 +37,12 @@ namespace Obj.Config.Action.Structure
         //Hierarchy、Project中物理相关Object的名称-物理根节点Physics
         public static readonly string Physics = "Physics";
         //Hierarchy、Project中物理相关Object的名称-动态碰撞器根节点
-        public static readonly string DynamicCollider = "Dynamic_Collider";
+        public static readonly string Collider = "Collider";
         //Hierarchy、Project中物理相关Object的名称-动态碰撞器物体-XZ轴
-        public static readonly string DynamicColliderXZ = "XZ";
+        public static readonly string DynamicColliderXZ = "Dynamic_XZ";
         //Hierarchy、Project中物理相关Object的名称-动态碰撞器物体-Y轴
-        public static readonly string DynamicColliderY = "Y";
+        public static readonly string DynamicColliderY = "Dynamic_Y";
         //Hierarchy、Project中物理相关Object的名称-静态碰撞器物体-XZ轴
-        public static readonly string StaticColliderXZ = "XZ_Collider";
+        public static readonly string StaticColliderXZ = "Static_XZ";
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefaultActionSo
   m_EditorClassIdentifier: 
   actionName: "\u6C99\u888B-\u9ED8\u8BA4"
+  actionShowName: "\u57CE\u9547-\u9ED8\u8BA4"
   type: 1
   subType: 0
   uuid: 300101001
@@ -78,14 +79,24 @@ MonoBehaviour:
   actionPhysics:
     infos:
     - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
-      box:
-        frameConfig:
+      judgeType: 3
+      damage:
+        type: 0
+        damageOnce:
+          damage: 0
+      colList:
+      - frameConfig:
         - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
           offset: {x: -0.6412871, y: 1.026059}
           size: {x: 0.6250938, y: 1.513029}
         orientationSensitive: 1
         colPos: 2
-        colJudgeType: 3
+      - frameConfig:
+        - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+          offset: {x: -0.5430021, y: 0.00000001490116}
+          size: {x: 0.6399684, y: 0.2751165}
+        orientationSensitive: 1
+        colPos: 1
   actionDisplacement:
     infos: []
   actionOther:

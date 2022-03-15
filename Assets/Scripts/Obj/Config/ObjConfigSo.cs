@@ -17,6 +17,9 @@ namespace Obj.Config
     [Serializable]
     public class ObjConfigSo : ScriptableObject
     {
+        [Header("物体展示名称")]
+        public string objShowName;
+        
         [Header("全局属性文件")]
         public TextAsset properties;
         

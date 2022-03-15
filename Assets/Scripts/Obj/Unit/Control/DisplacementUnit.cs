@@ -162,36 +162,44 @@ namespace Obj.Unit.Control
         //位移前处理
         private void DisPre()
         {
-            if (!CollectionUtil.IsEmpty(_info.ActiveDisplacementInfos))
+            //如果顿帧进行中，那么不进行任何移动计算
+            if (Core.GetActionFrameFreeze())
             {
-                foreach (var item in _info.ActiveDisplacementInfos)
+                return;
+            }
+            
+            if (CollectionUtil.IsEmpty(_info.ActiveDisplacementInfos))
+            {
+                return;
+            }
+
+            foreach (var item in _info.ActiveDisplacementInfos)
+            {
+                switch (item.type)
                 {
-                    switch (item.type)
-                    {
-                        //匀速处理
-                        case DisplacementType.Move:
-                            Handle_Move(item);
-                            break;
-                        //匀速按键处理
-                        case DisplacementType.MoveKeyHold:
-                            Handle_MoveKeyHold(item);
-                            break;
-                        //跳跃处理
-                        case DisplacementType.Jump:
-                            Handle_Jump(item);
-                            break;
-                        //下落处理
-                        case DisplacementType.Drop:
-                            Handle_Drop(item);
-                            break;
-                        //坠落处理
-                        case DisplacementType.Fall:
-                            Handle_Fall(item);
-                            break;
-                        //滞空处理
-                        case DisplacementType.SkyStay:
-                            break;
-                    }
+                    //匀速处理
+                    case DisplacementType.Move:
+                        Handle_Move(item);
+                        break;
+                    //匀速按键处理
+                    case DisplacementType.MoveKeyHold:
+                        Handle_MoveKeyHold(item);
+                        break;
+                    //跳跃处理
+                    case DisplacementType.Jump:
+                        Handle_Jump(item);
+                        break;
+                    //下落处理
+                    case DisplacementType.Drop:
+                        Handle_Drop(item);
+                        break;
+                    //坠落处理
+                    case DisplacementType.Fall:
+                        Handle_Fall(item);
+                        break;
+                    //滞空处理
+                    case DisplacementType.SkyStay:
+                        break;
                 }
             }
         }
@@ -199,6 +207,13 @@ namespace Obj.Unit.Control
         //位移处理
         private void DisProcess()
         {
+            //如果顿帧进行中，那么不进行任何移动计算，取消各类移动
+            if (Core.GetActionFrameFreeze())
+            {
+                SetFinalVelocityOnFreeze();
+                return;
+            }
+            
             //先计算总体速度
             _info.CalculateFinalVelocity();
             
@@ -209,6 +224,12 @@ namespace Obj.Unit.Control
         //位移后处理
         private void DisPost()
         {
+            //如果顿帧进行中，那么不进行任何移动计算
+            if (Core.GetActionFrameFreeze())
+            {
+                return;
+            }
+            
             //状态变更
             _info.StateChange(Core);
             
@@ -228,6 +249,12 @@ namespace Obj.Unit.Control
             //XYZ各轴移动处理，转换为游戏对象的移动
             SetVelocityXZ();
             SetVelocityY();
+        }
+
+        //设置顿帧期间的移动速度
+        private void SetFinalVelocityOnFreeze()
+        {
+            Core.GetRb().velocity = Vector2.zero;
         }
 
         //设置地面速度，Y轴另算
@@ -382,8 +409,9 @@ namespace Obj.Unit.Control
         }
 
         #endregion
-
-        #region 工具类
+    }
+    
+    #region 工具类
 
         //位移信息
         public class DisplacementInfo
@@ -576,5 +604,4 @@ namespace Obj.Unit.Control
         }
 
         #endregion
-    }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hit_1ActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u666E\u653B1"
+  actionShowName: "\u666E\u653B1"
   type: 8
   subType: 1
   uuid: 300100006
@@ -37,6 +38,9 @@ MonoBehaviour:
       aniFrameAudio: {fileID: 0}
     - spriteSequence: 8
       aniFrameAudio: {fileID: 0}
+    frameFreezeInfo:
+      frameIndexes: 030000000400000005000000
+      time: 200
     frameSwitchConditions:
     - frameIndexes: 000000000100000002000000030000000400000005000000060000000700000008000000
       type: 1
@@ -54,20 +58,42 @@ MonoBehaviour:
         keys: []
       fallPercent:
         percent: 0
-    breakLimits:
-    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
-      type: 1
-      condition: 1
-    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
-      type: 2
-      condition: 1
     orientationLimits: []
-    destroyLimits: []
   actionPhysics:
     infos:
+    - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000
+      judgeType: 3
+      damage:
+        type: 0
+        damageOnce:
+          damage: 0
+      colList:
+      - frameConfig:
+        - frameSequence: 000000000100000002000000
+          offset: {x: -0.1219733, y: 0.4683774}
+          size: {x: 0.5023494, y: 1.117094}
+        - frameSequence: 03000000
+          offset: {x: 0.1170943, y: 0.4049513}
+          size: {x: 0.5511384, y: 0.990242}
+        - frameSequence: 0400000005000000060000000700000008000000
+          offset: {x: 0.1902783, y: 0.4049513}
+          size: {x: 0.5413804, y: 0.990242}
+        orientationSensitive: 1
+        colPos: 2
+      - frameConfig:
+        - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000
+          offset: {x: 0, y: 0.00000001490116}
+          size: {x: 0.5215769, y: 0.2751165}
+        orientationSensitive: 1
+        colPos: 1
     - frameSequence: 030000000400000005000000
-      box:
-        frameConfig:
+      judgeType: 1
+      damage:
+        type: 1
+        damageOnce:
+          damage: 10
+      colList:
+      - frameConfig:
         - frameSequence: 03000000
           offset: {x: 0.6459403, y: 0.690344}
           size: {x: 1.082006, y: 0.4681466}
@@ -79,10 +105,7 @@ MonoBehaviour:
           size: {x: 0.7209644, y: 0.3217788}
         orientationSensitive: 1
         colPos: 2
-        colJudgeType: 1
-    - frameSequence: 030000000400000005000000
-      box:
-        frameConfig:
+      - frameConfig:
         - frameSequence: 03000000
           offset: {x: 0.6215456, y: -0.1244377}
           size: {x: 1.286921, y: 0.5754831}
@@ -94,22 +117,6 @@ MonoBehaviour:
           size: {x: 0.7795119, y: 0.4974201}
         orientationSensitive: 1
         colPos: 1
-        colJudgeType: 1
-    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-      box:
-        frameConfig:
-        - frameSequence: 000000000100000002000000
-          offset: {x: -0.1219733, y: 0.4683774}
-          size: {x: 0.5023494, y: 1.117094}
-        - frameSequence: 03000000
-          offset: {x: 0.1170943, y: 0.4049513}
-          size: {x: 0.5511384, y: 0.990242}
-        - frameSequence: 04000000050000000600000007000000
-          offset: {x: 0.1902783, y: 0.4049513}
-          size: {x: 0.5413804, y: 0.990242}
-        orientationSensitive: 1
-        colPos: 2
-        colJudgeType: 3
   actionDisplacement:
     infos:
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000

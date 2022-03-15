@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6d7e0f9b544098ae6100fd1743b32c, type: 3}
   m_Name: GhostKnightConfigSo
   m_EditorClassIdentifier: 
+  objShowName: "\u9B3C\u5251\u58EB"
   properties: {fileID: 4900000, guid: 650462d4d98134cf69199c822e9302bc, type: 3}
   graphics:
     positiveOrientation: 2

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6d7e0f9b544098ae6100fd1743b32c, type: 3}
   m_Name: SandBagConfigSo
   m_EditorClassIdentifier: 
+  objShowName: "\u6C99\u888B"
   properties: {fileID: 4900000, guid: 98a5bab151b4847e5b8910e6f0714592, type: 3}
   graphics:
     positiveOrientation: 1

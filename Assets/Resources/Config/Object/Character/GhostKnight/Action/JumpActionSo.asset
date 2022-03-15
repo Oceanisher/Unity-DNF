@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: JumpActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u8DF3"
+  actionShowName: "\u8DF3"
   type: 5
+  subType: 0
   uuid: 300100004
   loopType: 1
   actionFrame:
@@ -56,6 +58,8 @@ MonoBehaviour:
           keyStateList: 01000000020000000400000005000000
         orientation: 2
     destroyLimits: []
+  actionPhysics:
+    infos: []
   actionDisplacement:
     infos:
     - frameSequence: 01000000
@@ -162,15 +166,10 @@ MonoBehaviour:
       type: 2
       keyInvalid:
         keys: []
-    hasLinkage: 0
     linkage:
-      switchLimit:
-        frameIndexes: 
-        switchType: 0
-        switchOptType: 0
-        time: 0
-        timeKeys: []
-        conditionLimitMeter: 0
-        conditionLimitVelocity: 0
-        conditionPercent: 0
+      condition:
+        type: 0
+        timeLimitSame:
+          startFrame: 0
+          time: 0
       linkageAction: {fileID: 0}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WalkActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u8D70"
+  actionShowName: "\u8D70"
   type: 3
   subType: 0
   uuid: 300100002
@@ -76,25 +77,7 @@ MonoBehaviour:
         orientation: 2
     destroyLimits: []
   actionPhysics:
-    infos:
-    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-      box:
-        frameConfig:
-        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-          offset: {x: -0.004111767, y: 0.4481412}
-          size: {x: 0.3339558, y: 0.9424407}
-        orientationSensitive: 1
-        colPos: 2
-        colJudgeType: 3
-    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-      box:
-        frameConfig:
-        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-          offset: {x: 0.01233363, y: 1.015513}
-          size: {x: 0.185946, y: 0.1859455}
-        orientationSensitive: 1
-        colPos: 2
-        colJudgeType: 3
+    infos: []
   actionDisplacement:
     infos:
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000

@@ -13,6 +13,8 @@ namespace Obj.Config.Action
     {
         [Header("行为名称")]
         public string actionName;
+        [Header("行为展示名称")]
+        public string actionShowName;
         [Header("行为唯一标识")]
         public ActionType type;
         [Header("行为唯一子级标识")]

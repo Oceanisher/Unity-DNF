@@ -15,34 +15,36 @@ namespace Obj.Config.Action.Structure
         // public bool canFreeze;
         [Header("帧动画信息")]
         public List<AniFrameInfo> aniFrameInfos;
+        [Header("顿帧信息，攻击主动顿帧")]
+        public FrameFreezeInfo frameFreezeInfo;
         [Header("帧切换条件：切换到下一帧的条件")]
         public List<FrameSwitchCondition> frameSwitchConditions;
-        [Header("打断条件")]
-        public List<BreakLimit> breakLimits;
+        // [Header("打断条件")]
+        // public List<BreakLimit> breakLimits;
         [Header("朝向更改条件")]
         public List<OrientationSwitchCondition> orientationLimits;
-        [Header("销毁")]
-        public List<DestroyLimit> destroyLimits;
+        // [Header("销毁")]
+        // public List<DestroyLimit> destroyLimits;
 
         //当前帧是否可打断
-        public bool CanBreak(int index, BreakType checkType, BreakCondition checkCondition)
-        {
-            if (CollectionUtil.IsEmpty(breakLimits))
-            {
-                return false;
-            }
-            
-            //只要有一个可打断就可以
-            foreach (var item in breakLimits)
-            {
-                if (item.CanBreak(checkType, checkCondition))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        // public bool CanBreak(int index, BreakType checkType, BreakCondition checkCondition)
+        // {
+        //     if (CollectionUtil.IsEmpty(breakLimits))
+        //     {
+        //         return false;
+        //     }
+        //     
+        //     //只要有一个可打断就可以
+        //     foreach (var item in breakLimits)
+        //     {
+        //         if (item.CanBreak(checkType, checkCondition))
+        //         {
+        //             return true;
+        //         }
+        //     }
+        //
+        //     return false;
+        // }
     }
 
     //全局图形配置
@@ -185,7 +187,7 @@ namespace Obj.Config.Action.Structure
     public class ActionPhysics
     {
         [Header("物理配置")]
-        public List<PhyCol> infos;
+        public List<Phy> infos;
     }
     
     //行为位移配置
@@ -214,6 +216,17 @@ namespace Obj.Config.Action.Structure
         public int spriteSequence;
         [Header("动画帧音效")]
         public AudioClip aniFrameAudio;
+    }
+
+    //顿帧信息
+    [Serializable]
+    public class FrameFreezeInfo
+    {
+        [Header("帧序列")]
+        public List<int> frameIndexes;
+
+        [Header("顿帧时间，MS")]
+        public float time;
     }
 
     //打断条件

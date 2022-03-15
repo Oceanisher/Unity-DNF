@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RunActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u8DD1"
+  actionShowName: "\u8DD1"
   type: 4
   subType: 0
   uuid: 300100003
@@ -76,16 +77,7 @@ MonoBehaviour:
         orientation: 2
     destroyLimits: []
   actionPhysics:
-    infos:
-    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-      box:
-        frameConfig:
-        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
-          offset: {x: 0.1463677, y: 0.5117719}
-          size: {x: 0.5085925, y: 0.9698157}
-        orientationSensitive: 1
-        colPos: 2
-        colJudgeType: 3
+    infos: []
   actionDisplacement:
     infos:
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000

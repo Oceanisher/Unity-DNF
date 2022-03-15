@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TownDefaultActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u57CE\u9547-\u9ED8\u8BA4"
+  actionShowName: "\u57CE\u9547-\u9ED8\u8BA4"
   type: 1
   subType: 0
   uuid: 300100001
@@ -56,23 +57,30 @@ MonoBehaviour:
   actionPhysics:
     infos:
     - frameSequence: 00000000010000000200000003000000
-      box:
-        frameConfig:
+      judgeType: 3
+      damage:
+        type: 0
+        damageOnce:
+          damage: 0
+      colList:
+      - frameConfig:
         - frameSequence: 00000000010000000200000003000000
           offset: {x: -0.004111767, y: 0.4481412}
           size: {x: 0.3339558, y: 0.9424407}
         orientationSensitive: 1
         colPos: 2
-        colJudgeType: 3
-    - frameSequence: 00000000010000000200000003000000
-      box:
-        frameConfig:
+      - frameConfig:
         - frameSequence: 00000000010000000200000003000000
           offset: {x: 0.01233363, y: 1.015513}
           size: {x: 0.185946, y: 0.1859455}
         orientationSensitive: 1
         colPos: 2
-        colJudgeType: 3
+      - frameConfig:
+        - frameSequence: 00000000010000000200000003000000
+          offset: {x: 0, y: 0.00000001490116}
+          size: {x: 0.5215769, y: 0.2751165}
+        orientationSensitive: 1
+        colPos: 1
   actionDisplacement:
     infos: []
   actionOther:

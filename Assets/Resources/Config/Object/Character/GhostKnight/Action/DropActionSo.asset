@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: DropActionSo
   m_EditorClassIdentifier: 
   actionName: "\u9B3C\u5251\u58EB-\u4E0B\u843D"
+  actionShowName: "\u4E0B\u843D"
   type: 6
+  subType: 0
   uuid: 300100005
   loopType: 1
   actionFrame:
@@ -74,15 +76,19 @@ MonoBehaviour:
           keyStateList: 01000000020000000400000005000000
         orientation: 2
     destroyLimits: []
+  actionPhysics:
+    infos: []
   actionDisplacement:
     infos:
     - frameSequence: 000000000100000002000000
       type: 2
       move:
         velocityType: 0
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 0
       moveKeyHold:
         velocityType: 1
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 3
         keys:
         - key: 3
@@ -98,9 +104,11 @@ MonoBehaviour:
       type: 2
       move:
         velocityType: 0
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 0
       moveKeyHold:
         velocityType: 1
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 4
         keys:
         - key: 2
@@ -116,9 +124,11 @@ MonoBehaviour:
       type: 2
       move:
         velocityType: 0
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 0
       moveKeyHold:
         velocityType: 1
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 7
         keys:
         - key: 4
@@ -134,9 +144,11 @@ MonoBehaviour:
       type: 2
       move:
         velocityType: 0
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 0
       moveKeyHold:
         velocityType: 1
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 8
         keys:
         - key: 5
@@ -152,9 +164,11 @@ MonoBehaviour:
       type: 4
       move:
         velocityType: 0
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 0
       moveKeyHold:
         velocityType: 1
+        customVelocity: {x: 0, y: 0, z: 0}
         orientationType: 8
         keys:
         - key: 5
@@ -172,15 +186,10 @@ MonoBehaviour:
       type: 3
       keyInvalid:
         keys: []
-    hasLinkage: 0
     linkage:
-      switchLimit:
-        frameIndexes: 
-        switchType: 0
-        switchOptType: 0
-        time: 0
-        timeKeys: []
-        conditionLimitMeter: 0
-        conditionLimitVelocity: 0
-        conditionPercent: 0
+      condition:
+        type: 0
+        timeLimitSame:
+          startFrame: 0
+          time: 0
       linkageAction: {fileID: 0}

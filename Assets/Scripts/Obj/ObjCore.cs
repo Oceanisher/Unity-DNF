@@ -25,7 +25,6 @@ namespace Obj
 
         [Header("图形父节点")] [SerializeField] private GameObject _graphicsGo;
         [Header("物理父节点")] [SerializeField] private GameObject _physicsGo;
-
         [Header("物体配置")] [SerializeField] private ObjConfigSo objConfigSo;
 
         #region 属性/行为配置
@@ -35,22 +34,6 @@ namespace Obj
         //行为字典
         private Dictionary<ActionType, ActionSo> _actionMap;
 
-        // public ActionSo TownDefaultAction { get; private set; }
-        // public ActionSo FightDefaultGroundAction { get; private set; }
-        // public ActionSo FightDefaultFlyAction { get; private set; }
-        // public ActionSo WalkAction { get; private set; }
-        // public ActionSo RunAction { get; private set; }
-        // public ActionSo HitAction { get; private set; }
-        // public ActionSo DropAction { get; private set; }
-        // public ActionSo SkyStayAction { get; private set; }
-        // public ActionSo GroundHurtAction { get; private set; }
-        // public ActionSo GroundControlledAction { get; private set; }
-        // public ActionSo SkyHurtAction { get; private set; }
-        // public ActionSo SkyControlledAction { get; private set; }
-        // public ActionSo CollapseAction { get; private set; }
-        // public ActionSo JumperAction { get; private set; }
-        // public ActionSo FallAction { get; private set; }
-        // public ActionSo GetUpAction { get; private set; }
         public List<ActionSo> AllActions => objConfigSo.allActions;
 
         //物体属性配置
@@ -130,6 +113,8 @@ namespace Obj
             _actionUnit.OnFramePost += OnFrameChangePost;
             _displacementUnit.OnDisplacement += OnDisplacement;
             _physicsUnit.OnReColPost += OnReColPost;
+            _physicsUnit.OnColEnter += OnColEnter;
+            _physicsUnit.OnColExit += OnColExit;
 
             _characterFlags = CharacterFlags.BuildInit(Properties_IsFlyObj(), false);
 
@@ -250,6 +235,18 @@ namespace Obj
             return _actionUnit.ActiveAction;
         }
 
+        //获取当前行为的当前帧序列
+        public int GetActiveActionFrameIndex()
+        {
+            return _actionUnit.ActiveFrameIndex;
+        }
+
+        //获取当前行为的实时Uuid
+        public string GetActiveActionUuid()
+        {
+            return _actionUnit.Info.ActiveUuid;
+        }
+
         //获取当前行为的帧配置
         public AniFrameInfo GetActiveFrameInfo()
         {
@@ -260,6 +257,12 @@ namespace Obj
         public ActionDisplacement GetActiveDisplacement()
         {
             return _actionUnit.ActiveAction.actionDisplacement;
+        }
+
+        //当前是否在顿帧中
+        public bool GetActionFrameFreeze()
+        {
+            return _actionUnit.Info.OnFreezeProcess;
         }
 
         //获取图形父节点
@@ -337,49 +340,6 @@ namespace Obj
                 {
                     _actionMap.Add(item.type, item);
                 }
-                
-                // if (item.type == ActionType.CharacterDefaultTown)
-                // {
-                //     TownDefaultAction = item;
-                //     continue;
-                // }
-                // if (item.type == ActionType.CharacterDefaultFight)
-                // {
-                //     FightDefaultGroundAction = item;
-                //     continue;
-                // }
-                // if (item.type == ActionType.CharacterWalk)
-                // {
-                //     WalkAction = item;
-                //     continue;
-                // }
-                // if (item.type == ActionType.CharacterRun)
-                // {
-                //     RunAction = item;
-                //     continue;
-                // }
-                // if (item.type == ActionType.CharacterJump)
-                // {
-                //     JumperAction = item;
-                //     continue;
-                // }
-                // if (item.type == ActionType.CharacterDrop)
-                // {
-                //     DropAction = item;
-                //     continue;
-                // }
-                // if (item.type == ActionType.CharacterFall)
-                // {
-                //     FallAction = item;
-                //     continue;
-                // }
-                // //Hit行为只包含初始行为
-                // if (item.type == ActionType.CharacterHit
-                //     && item.subType == ActionSubType.CharacterHit_1)
-                // {
-                //     HitAction = item;
-                //     continue;
-                // }
             }
         }
 
@@ -468,15 +428,31 @@ namespace Obj
         }
 
         //位移回调
-        private void OnDisplacement(DisplacementUnit.DisplacementInfo displacementInfo)
+        private void OnDisplacement(DisplacementInfo displacementInfo)
         {
             //TODO 先回调Action单元
             _actionUnit.CharacterDisplacementChange(displacementInfo);
         }
 
         //重设碰撞器回调
-        private void OnReColPost(PhysicsUnit.PhysicsInfo info)
+        private void OnReColPost(PhysicsInfo info)
         {
+        }
+
+        //碰撞进入
+        private void OnColEnter(ColItemInfo info)
+        {
+            //TODO 后续应该有DamageUnit来判断能够造成了伤害，才会调用ActionUnit去顿帧
+            //被动碰撞方回调
+            _actionUnit.ColEnterPassive(info);
+            //主动碰撞方调用
+            info.OtherCore._actionUnit.ColEnterActive(info);
+        }
+        
+        //碰撞离开
+        private void OnColExit(ColItemInfo info)
+        {
+            //TODO 暂无
         }
 
         #endregion
@@ -584,15 +560,15 @@ namespace Obj
             //绘制动态
             foreach (var item in _physicsUnit.Info.PhyColMap)
             {
-                switch (item.Key.box.colPos)
+                switch (item.Key.colPos)
                 {
                     case ColPos.None:
                         break;
                     case ColPos.XZ:
-                        ColDrawUtil.DrawObjCol(_physicsUnit.DynamicXZ, item.Value, item.Key);
+                        ColDrawUtil.DrawObjCol(_physicsUnit.DynamicXZ, item.Value, item.Key, _physicsUnit.Info.GetPhy(item.Key));
                         break;
                     case ColPos.Y:
-                        ColDrawUtil.DrawObjCol(_physicsUnit.DynamicY, item.Value, item.Key);
+                        ColDrawUtil.DrawObjCol(_physicsUnit.DynamicY, item.Value, item.Key, _physicsUnit.Info.GetPhy(item.Key));
                         break;
                 }
             }

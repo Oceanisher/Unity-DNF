@@ -6,18 +6,57 @@ namespace Obj.Config.Action.Structure
 {
     //物理配置
     [Serializable]
-    public class PhyCol
+    public class Phy
     {
         [Header("帧序列，序号为ActionFrame顺序")]
         public List<int> frameSequence;
+        
+        [Header("碰撞器判断类型")]
+        public PhyJudgeType judgeType;
 
-        [Header("Box碰撞器配置")]
-        public BoxCol box;
+        [Header("伤害配置")]
+        public PhyDamage damage;
+
+        [Header("碰撞器配置")]
+        public List<PhyCol> colList;
     }
+
+    #region 伤害配置
+
+    //物理伤害配置
+    [Serializable]
+    public class PhyDamage
+    {
+        [Header("伤害类型")]
+        public PhyDamageType type;
+
+        [Header("一次性伤害")]
+        public PhyDamageOnce damageOnce;
+    }
+
+    //物理伤害类型
+    [Serializable]
+    public enum PhyDamageType
+    {
+        None,
+        Once,//一次性伤害，一个技能实例期间该物理碰撞器只生效一次
+    }
+
+    //一次性伤害
+    [Serializable]
+    public class PhyDamageOnce
+    {
+        [Header("伤害值")]
+        public float damage;
+    }
+
+    #endregion
+
+    #region 碰撞器配置
 
     //Box碰撞器类型
     [Serializable]
-    public class BoxCol
+    public class PhyCol
     {
         [Header("Box碰撞器帧配置")]
         public List<ColFrameConfig> frameConfig;
@@ -27,9 +66,6 @@ namespace Obj.Config.Action.Structure
 
         [Header("碰撞器位置类型")]
         public ColPos colPos;
-
-        [Header("碰撞器判断类型")]
-        public ColJudgeType colJudgeType;
     }
 
     //碰撞器帧配置
@@ -46,13 +82,6 @@ namespace Obj.Config.Action.Structure
         public Vector2 size;
     }
 
-    // //碰撞器类型
-    // public enum ColType
-    // {
-    //     None,
-    //     NormalBox,//普通Box碰撞器
-    // }
-    
     //碰撞器位置
     public enum ColPos
     {
@@ -62,11 +91,13 @@ namespace Obj.Config.Action.Structure
     }
 
     //碰撞器判断类型
-    public enum ColJudgeType
+    public enum PhyJudgeType
     {
         None,
         Hit,//直接造成伤害
         Judge,//用来判断
         Body,//物体身体部分框
     }
+
+    #endregion
 }
