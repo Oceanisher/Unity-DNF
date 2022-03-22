@@ -41,44 +41,37 @@ MonoBehaviour:
   - {fileID: 11400000, guid: deb0f44291a9e4945ac5f93ea03d82bb, type: 2}
   - {fileID: 11400000, guid: 8fb8fbcb5da0e40fda774f067e5c7097, type: 2}
   - {fileID: 11400000, guid: 4dbb4389d10b9408a8bd416d530ea766, type: 2}
+  - {fileID: 11400000, guid: 838a0df7a383146b58d869afab20ba6f, type: 2}
   keyTypeInputMap:
-  - key:
-      type: 2
+  - key: 3
+    value:
+    - type: 2
       states: 0100000002000000
-    value: 3
-  - key:
-      type: 3
+    - type: 3
       states: 0100000002000000
-    value: 3
-  - key:
-      type: 4
+    - type: 4
       states: 0100000002000000
-    value: 3
-  - key:
-      type: 5
+    - type: 5
       states: 0100000002000000
-    value: 3
-  - key:
-      type: 2
+  - key: 4
+    value:
+    - type: 2
       states: 0400000005000000
-    value: 4
-  - key:
-      type: 3
+    - type: 3
       states: 0400000005000000
-    value: 4
-  - key:
-      type: 4
+    - type: 4
       states: 0400000005000000
-    value: 4
-  - key:
-      type: 5
+    - type: 5
       states: 0400000005000000
-    value: 4
-  - key:
-      type: 7
+  - key: 5
+    value:
+    - type: 7
+      states: 01000000020000000500000005000000
+  - key: 8
+    value:
+    - type: 6
+      states: 01000000020000000500000005000000
+  - key: 9
+    value:
+    - type: 6
       states: 0100000004000000
-    value: 5
-  - key:
-      type: 6
-      states: 01000000040000000200000005000000
-    value: 8

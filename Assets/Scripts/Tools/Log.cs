@@ -12,6 +12,12 @@ namespace Tools
         {
             Debug.LogError(str);
         }
+        
+        //普通Warn日志
+        public static void Warn(string str, LogModule module)
+        {
+            Debug.LogWarning(str);
+        }
 
         //普通Info日志
         public static void Info(string str, LogModule module)
@@ -24,6 +30,14 @@ namespace Tools
         {
 #if UNITY_EDITOR
             Debug.LogError(str);
+#endif
+        }
+        
+        //普通Warn日志-Debug
+        public static void DebugWarn(string str, LogModule module)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning(str);
 #endif
         }
 

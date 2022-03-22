@@ -21,26 +21,24 @@ MonoBehaviour:
   actionFrame:
     aniFrameInfos:
     - spriteSequence: 0
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 1
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 2
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 3
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 4
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 5
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 6
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 7
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 8
-      aniFrameAudio: {fileID: 0}
     frameFreezeInfo:
       frameIndexes: 030000000400000005000000
       time: 200
+    frameAudioInfos:
+    - frameIndexes: 00000000
+      audioClipList:
+      - {fileID: 8300000, guid: 759fe09b31c3943aab58a44f19e010f2, type: 3}
+      loopType: 1
+      chooseType: 0
+      volumePercent: 100
     frameSwitchConditions:
     - frameIndexes: 000000000100000002000000030000000400000005000000060000000700000008000000
       type: 1
@@ -180,6 +178,10 @@ MonoBehaviour:
       fall:
         accelerate: 0
   actionOther:
+    actionStartConditions:
+    - type: 1
+      skyHeightOver:
+        height: 0
     actionStopCondition: []
     linkage:
       condition:

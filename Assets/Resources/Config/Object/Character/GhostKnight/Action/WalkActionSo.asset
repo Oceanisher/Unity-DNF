@@ -21,21 +21,25 @@ MonoBehaviour:
   actionFrame:
     aniFrameInfos:
     - spriteSequence: 180
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 181
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 182
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 183
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 184
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 185
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 186
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 187
-      aniFrameAudio: {fileID: 0}
+    frameFreezeInfo:
+      frameIndexes: 
+      time: 0
+    frameAudioInfos:
+    - frameIndexes: 0300000006000000
+      audioClipList:
+      - {fileID: 8300000, guid: 83c39a3132b744121a8ac1e85ff12250, type: 3}
+      - {fileID: 8300000, guid: ce26616b2b3f649879a2403c7b4d787f, type: 3}
+      - {fileID: 8300000, guid: 1da857f805c2746edb4317c74fde8762, type: 3}
+      loopType: 1
+      chooseType: 2
+      volumePercent: 20
     frameSwitchConditions:
     - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
       type: 1
@@ -53,13 +57,6 @@ MonoBehaviour:
         keys: []
       fallPercent:
         percent: 0
-    breakLimits:
-    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
-      type: 1
-      condition: 1
-    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
-      type: 2
-      condition: 1
     orientationLimits:
     - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
       type: 1
@@ -75,10 +72,29 @@ MonoBehaviour:
         - key: 3
           keyStateList: 0100000002000000
         orientation: 2
-    destroyLimits: []
   actionPhysics:
-    infos: []
+    infos:
+    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+      judgeType: 3
+      damage:
+        type: 0
+        damageOnce:
+          damage: 0
+      colList:
+      - frameConfig:
+        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+          offset: {x: -0.01982784, y: 0.5551754}
+          size: {x: 0.345686, y: 1.118966}
+        orientationSensitive: 1
+        colPos: 2
+      - frameConfig:
+        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+          offset: {x: 0, y: 0.00000001490116}
+          size: {x: 0.5215769, y: 0.2751165}
+        orientationSensitive: 1
+        colPos: 1
   actionDisplacement:
+    resetInnerSpeedY: 0
     infos:
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
@@ -95,11 +111,6 @@ MonoBehaviour:
           keyStateList: 0100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
       move:
@@ -115,11 +126,6 @@ MonoBehaviour:
           keyStateList: 0100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
       move:
@@ -135,11 +141,6 @@ MonoBehaviour:
           keyStateList: 0100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
       move:
@@ -155,12 +156,11 @@ MonoBehaviour:
           keyStateList: 0100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
   actionOther:
+    actionStartConditions:
+    - type: 1
+      skyHeightOver:
+        height: 0
     actionStopCondition:
     - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
       type: 1

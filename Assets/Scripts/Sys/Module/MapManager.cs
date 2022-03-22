@@ -44,6 +44,8 @@ namespace Sys.Module
 
             //TODO
             base.Init(type);
+            
+            HasInit = true;
         }
         
         #region IKeyHanlder 接口

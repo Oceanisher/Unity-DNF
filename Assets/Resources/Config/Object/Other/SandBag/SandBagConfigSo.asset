@@ -34,4 +34,5 @@ MonoBehaviour:
     weapon2OffsetTxt: {fileID: 0}
   allActions:
   - {fileID: 11400000, guid: 5eaeaf049f1254272a6f6e10d1249cc1, type: 2}
+  - {fileID: 11400000, guid: 231906d1ed4c045979fb6f3ace5ab21e, type: 2}
   keyTypeInputMap: []

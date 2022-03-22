@@ -21,7 +21,7 @@ namespace Obj.Config.Action
         public ActionSubType subType;
         [Header("行为唯一ID")]
         public string uuid;
-        [Header("循环类型")]
+        [Header("行为循环类型")]
         public ActionLoopType loopType;
         
         [Header("帧配置")]

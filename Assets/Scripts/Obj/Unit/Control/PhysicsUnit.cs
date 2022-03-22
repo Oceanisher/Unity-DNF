@@ -1,22 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Obj.Config.Action;
 using Obj.Config.Action.Structure;
 using Obj.Event;
 using Tools;
 using UnityEngine;
 using UnityEngine.Events;
+using Obj.Unit.Control.Item;
+using Sys.Module;
 
 namespace Obj.Unit.Control
 {
     //物理单元
     public class PhysicsUnit : AbstractObjUnit
     {
-        [Header("碰撞器组件Prefab")]
-        [SerializeField]
-        private GameObject colComponentPrefab;
+        // [Header("碰撞器组件Prefab")]
+        // [SerializeField]
+        // private GameObject colComponentPrefab;
         
         //重设碰撞器之后的回调
         public UnityAction<PhysicsInfo> OnReColPost;
@@ -52,6 +53,12 @@ namespace Obj.Unit.Control
 #endif
 
         #region 外部接口
+        
+        //角色类位移变更
+        public void CharacterDisplacementChange(DisplacementInfo info)
+        {
+            ResetColOnDis(info);
+        }
 
         #endregion
         
@@ -176,11 +183,11 @@ namespace Obj.Unit.Control
             switch (phyCol.colPos)
             {
                 case ColPos.XZ:
-                    colGo = Instantiate(colComponentPrefab, _dynamicXZ.transform);
+                    colGo = Instantiate(GlobalResManager.Instance.ColComponent, _dynamicXZ.transform);
                     col = colGo.AddComponent<BoxCollider2D>();
                     break;
                 case ColPos.Y:
-                    colGo = Instantiate(colComponentPrefab, _dynamicY.transform);
+                    colGo = Instantiate(GlobalResManager.Instance.ColComponent, _dynamicY.transform);
                     col = colGo.AddComponent<BoxCollider2D>();
                     break;
             }
@@ -191,7 +198,7 @@ namespace Obj.Unit.Control
             }
             
             //初始化组件
-            colGo.GetComponent<PhysicsColUnit>().Init(this, phy, phyCol);
+            colGo.GetComponent<PhysicsColUnitItem>().Init(this, phy, phyCol);
 
             //重新设置offset、size
             ResetCol(col, phyCol);
@@ -225,9 +232,29 @@ namespace Obj.Unit.Control
                     {
                         col.offset = item.offset;
                     }
+                    
+                    //Y碰撞器offset要加上Graphics的偏移
+                    if (phyCol.colPos == ColPos.Y)
+                    {
+                        col.offset += (Vector2)Core.GetGraphicsGo().transform.localPosition;
+                    }
 
                     col.size = item.size;
                 }
+            }
+        }
+
+        //位移改变时，变更碰撞器
+        private void ResetColOnDis(DisplacementInfo disInfo)
+        {
+            if (CollectionUtil.IsEmpty(_info.PhyColMap))
+            {
+                return;
+            }
+
+            foreach (var item in _info.PhyColMap)
+            {
+                ResetCol(item.Value, item.Key);
             }
         }
 
@@ -236,7 +263,7 @@ namespace Obj.Unit.Control
         #region 碰撞处理
 
         //碰撞发生处理
-        public void OnCol(PhysicsColUnit self, PhysicsColUnit other, ColOccurType occurType)
+        public void OnCol(PhysicsColUnitItem self, PhysicsColUnitItem other, ColOccurType occurType)
         {
             lock (this)
             {
@@ -250,7 +277,7 @@ namespace Obj.Unit.Control
         }
 
         //碰撞前置处理
-        private void ColProcessPre(PhysicsColUnit self, PhysicsColUnit other, ColOccurType occurType)
+        private void ColProcessPre(PhysicsColUnitItem self, PhysicsColUnitItem other, ColOccurType occurType)
         {
             switch (occurType)
             {
@@ -304,26 +331,27 @@ namespace Obj.Unit.Control
                 //碰撞进入处理
                 if (itemInfo.IsEnterProcess())
                 {
-                    Log.Error($"[Physics]物体:{itemInfo.OtherCore.ObjConfigSo.objShowName} " +
-                              $"使用:{itemInfo.OtherCore.GetActiveAction().actionShowName} " +
-                              $"攻击了:{Core.ObjConfigSo.objShowName}, " +
-                              $"造成:{itemInfo.OtherPhy.damage.damageOnce.damage}伤害", 
-                        LogModule.ObjCore);
+                    // Log.Error($"[Physics]物体:{itemInfo.OtherCore.ObjConfigSo.objShowName} " +
+                    //           $"使用:{itemInfo.OtherCore.GetActiveAction().actionShowName} " +
+                    //           $"攻击了:{Core.ObjConfigSo.objShowName}, " +
+                    //           $"造成:{itemInfo.OtherPhy.damage.damageOnce.damage}伤害", 
+                    //     LogModule.ObjCore);
                     OnColEnter?.Invoke(itemInfo);
+                    //设置处理完成标识位
+                    itemInfo.SetProcessed();
                 }
                 //碰撞离开处理
                 if (itemInfo.IsExitProcess())
                 {
-                    Log.Error($"[Physics]物体:{itemInfo.OtherCore.ObjConfigSo.objShowName} " +
-                              $"使用:{itemInfo.OtherCore.GetActiveAction().actionShowName} " +
-                              $"攻击了:{Core.ObjConfigSo.objShowName}, " +
-                              "完成", 
-                        LogModule.ObjCore);
+                    // Log.Error($"[Physics]物体:{itemInfo.OtherCore.ObjConfigSo.objShowName} " +
+                    //           $"使用:{itemInfo.OtherCore.GetActiveAction().actionShowName} " +
+                    //           $"攻击了:{Core.ObjConfigSo.objShowName}, " +
+                    //           "完成", 
+                    //     LogModule.ObjCore);
                     OnColExit?.Invoke(itemInfo);
+                    //设置处理完成标识位
+                    itemInfo.SetProcessed();
                 }
-                
-                //设置处理完成标识位
-                itemInfo.SetProcessed();
             }
         }
 
@@ -567,7 +595,7 @@ namespace Obj.Unit.Control
             }
 
             //碰撞进入
-            public void ColEnter(PhysicsColUnit self, PhysicsColUnit other)
+            public void ColEnter(PhysicsColUnitItem self, PhysicsColUnitItem other)
             {
                 //获取对面行为的uuid
                 string uuid = other.PhysicsUnit.Core.GetActiveActionUuid();
@@ -585,13 +613,13 @@ namespace Obj.Unit.Control
             }
 
             //碰撞保持
-            public void ColStay(PhysicsColUnit self, PhysicsColUnit other)
+            public void ColStay(PhysicsColUnitItem self, PhysicsColUnitItem other)
             {
                 //TODO 暂时不变，因为在Enter的时候已经加入了
             }
 
             //碰撞退出
-            public void ColExit(PhysicsColUnit self, PhysicsColUnit other)
+            public void ColExit(PhysicsColUnitItem self, PhysicsColUnitItem other)
             {
                 //获取对面行为的uuid
                 string uuid = other.PhysicsUnit.Core.GetActiveActionUuid();
@@ -622,31 +650,33 @@ namespace Obj.Unit.Control
         public class ColItemInfo
         {
             //自身Core
-            public ObjCore SelfCore;
+            public ObjCore SelfCore { get; private set; }
             //对方Core
-            public ObjCore OtherCore;
+            public ObjCore OtherCore { get; private set; }
             //自身行为
-            public ActionSo SelfAction;
+            public ActionSo SelfAction { get; private set; }
             //对方行为
-            public ActionSo OtherAction;
+            public ActionSo OtherAction { get; private set; }
             //自身行为帧序列
-            public int SelfFrameIndex;
+            public int SelfFrameIndex { get; private set; }
             //对方行为帧序列
-            public int OtherFrameIndex;
+            public int OtherFrameIndex { get; private set; }
             //自身物理配置
-            public Phy SelfPhy;
+            public Phy SelfPhy { get; private set; }
             //对方物理配置
-            public Phy OtherPhy;
+            public Phy OtherPhy { get; private set; }
             //碰撞时间点
-            public float Time;
+            public float Time { get; private set; }
             //XZ已碰撞
-            public bool ColXz;
+            public bool ColXz { get; private set; }
             //Y已碰撞
-            public bool ColY;
+            public bool ColY { get; private set; }
+            //是否是有效碰撞
+            public bool ValidCol { get; private set; }
             //是否已经处理过，仅当ColXz、ColY状态相同时才会变为true
-            public bool Processed;
+            public bool Processed { get; private set; }
 
-            public static ColItemInfo Build(PhysicsColUnit self, PhysicsColUnit other)
+            public static ColItemInfo Build(PhysicsColUnitItem self, PhysicsColUnitItem other)
             {
                 ColItemInfo info = new ColItemInfo();
                 info.SelfCore = self.PhysicsUnit.Core;
@@ -660,6 +690,7 @@ namespace Obj.Unit.Control
                 info.Time = TimeUtil.TimeMs();
                 info.ColXz = other.PhyCol.colPos == ColPos.XZ;
                 info.ColY = other.PhyCol.colPos == ColPos.Y;
+                info.ValidCol = false;
                 info.Processed = info.ColXz ^ info.ColY;
                 return info;
             }
@@ -675,6 +706,12 @@ namespace Obj.Unit.Control
                 {
                     ColY = isCol;
                 }
+
+                if (ColY && ColXz)
+                {
+                    ValidCol = true;
+                }
+                
                 Processed = ColXz ^ ColY;
             }
 
@@ -687,13 +724,13 @@ namespace Obj.Unit.Control
             //是否是完全碰撞的进入处理
             public bool IsEnterProcess()
             {
-                return !Processed && ColXz == true && ColY == true;
+                return ValidCol && !Processed && ColXz == true && ColY == true;
             }
 
             //是否是完全离开的进入处理
             public bool IsExitProcess()
             {
-                return !Processed && ColXz == false && ColY == false;
+                return ValidCol && !Processed && ColXz == false && ColY == false;
             }
         }
         

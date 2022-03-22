@@ -8,6 +8,7 @@ using Obj.Config.Property;
 using Obj.Event;
 using Obj.Unit;
 using Obj.Unit.Control;
+using Obj.Unit.Control.Item;
 using Obj.Unit.UI;
 using Sys;
 using Sys.Config;
@@ -23,8 +24,6 @@ namespace Obj
         //是否初始化完成
         public bool HasInit { get; set; }
 
-        [Header("图形父节点")] [SerializeField] private GameObject _graphicsGo;
-        [Header("物理父节点")] [SerializeField] private GameObject _physicsGo;
         [Header("物体配置")] [SerializeField] private ObjConfigSo objConfigSo;
 
         #region 属性/行为配置
@@ -47,28 +46,31 @@ namespace Obj
         
         //行为单元
         private ActionUnit _actionUnit;
-
         //位移单元
         private DisplacementUnit _displacementUnit;
-
         //物理单元
         private PhysicsUnit _physicsUnit;
-
+        //伤害单元
+        private FightUnit _fightUnit;
         //图形单元
         private GraphicsUnit _graphicsUnit;
-
+        //音频单元
+        private AudioUnit _audioUnit;
         //单元列表
         private List<AbstractObjUnit> _unitList;
-
         //刚体
         private Rigidbody2D _rb;
+        //图形父节点
+        private GameObject _graphicsGo;
+        //物理父节点
+        private GameObject _physicsGo;
 
         //最近的按键列表
         private List<InputManager.KeyInfo> _frameKeys = new List<InputManager.KeyInfo>();
         public List<InputManager.KeyInfo> FrameKeys => _frameKeys;
 
         //角色物体状态标志位
-        private CharacterFlags _characterFlags;
+        // private CharacterFlags _characterFlags;
 
         private void Update()
         {
@@ -90,18 +92,24 @@ namespace Obj
         public void Init()
         {
             //各类属性获取
-            _actionUnit = GetComponentInChildren<ActionUnit>();
-            _displacementUnit = GetComponentInChildren<DisplacementUnit>();
-            _physicsUnit = GetComponentInChildren<PhysicsUnit>();
-            _graphicsUnit = GetComponentInChildren<GraphicsUnit>();
+            _actionUnit = GetComponent<ActionUnit>();
+            _displacementUnit = GetComponent<DisplacementUnit>();
+            _physicsUnit = GetComponent<PhysicsUnit>();
+            _fightUnit = GetComponent<FightUnit>();
+            _graphicsUnit = GetComponent<GraphicsUnit>();
+            _audioUnit = GetComponent<AudioUnit>();
 
             _unitList = new List<AbstractObjUnit>();
             _unitList.Add(_actionUnit);
             _unitList.Add(_displacementUnit);
             _unitList.Add(_physicsUnit);
+            _unitList.Add(_fightUnit);
             _unitList.Add(_graphicsUnit);
+            _unitList.Add(_audioUnit);
             
             _rb = GetComponent<Rigidbody2D>();
+            _graphicsGo = transform.Find(ActionConstant.Graphics)?.gameObject;
+            _physicsGo = transform.Find(ActionConstant.Physics)?.gameObject;
             
             //各类初始化
             ConfigInit();
@@ -116,7 +124,7 @@ namespace Obj
             _physicsUnit.OnColEnter += OnColEnter;
             _physicsUnit.OnColExit += OnColExit;
 
-            _characterFlags = CharacterFlags.BuildInit(Properties_IsFlyObj(), false);
+            // _characterFlags = CharacterFlags.BuildInit(Properties_IsFlyObj(), false);
 
             //完成初始化
             HasInit = true;
@@ -134,19 +142,6 @@ namespace Obj
             _frameKeys.AddRange(keyInfos);
         }
 
-        //变更角色位置类型
-        public void ChangePosState(ObjPosState state)
-        {
-            ObjPosState preState = _properties.DynamicProperties.CharacterProperties.PosState;
-            _properties.DynamicProperties.CharacterProperties.PosState = state;
-
-            if (preState != state)
-            {
-                //发送事件
-                SendPosStateEvent(preState, state);
-            }
-        }
-
         //变更物体朝向
         public void ChangeOrientation(Orientation orientation)
         {
@@ -160,10 +155,10 @@ namespace Obj
             }
         }
 
-        //AI行为变更
-        public void ActionChange_Ai(ActionSo action, int frameIndex)
+        //Force行为变更
+        public void ActionChange_Force(ActionSo action, int frameIndex)
         {
-            _actionUnit.ActionChange_AI(action, frameIndex);
+            _actionUnit.ActionChange_Force(action, frameIndex);
         }
 
         //手动行为变更
@@ -183,10 +178,22 @@ namespace Obj
             return action;
         }
 
-        #endregion
+        //批量获取行为
+        public List<ActionSo> GetActions(HashSet<ActionType> typeList)
+        {
+            List<ActionSo> list = new List<ActionSo>();
+            foreach (var type in typeList)
+            {
+                ActionSo action = GetAction(type);
+                if (null != action)
+                {
+                    list.Add(action);
+                }
+            }
 
-        #region 工具方法-读
-
+            return list;
+        }
+        
         //当前帧是否有指定按键
         public bool HasKeyCurrentFrame(List<KeyLimit> keyLimits)
         {
@@ -211,6 +218,30 @@ namespace Obj
                     {
                         return true;
                     }
+                }
+            }
+
+            return false;
+        }
+
+        //是否包含当前按键
+        public bool HasKey(KeyType key)
+        {
+            if (CollectionUtil.IsEmpty(_frameKeys))
+            {
+                return false;
+            }
+
+            if (key == KeyType.Any)
+            {
+                return true;
+            }
+            
+            foreach (var keyInfo in _frameKeys)
+            {
+                if (key == keyInfo.KeyType)
+                {
+                    return true;
                 }
             }
 
@@ -277,6 +308,18 @@ namespace Obj
             return _physicsGo;
         }
 
+        //获取位移信息
+        public DisplacementInfo GetDisInfo()
+        {
+            return _displacementUnit.Info;
+        }
+
+        //获取物体当前位置状态
+        public ObjPosState GetObjState()
+        {
+            return _properties.DynamicProperties.CharacterProperties.PosState;
+        }
+
         //当前是否是正向
         public bool IsPositiveOrientation()
         {
@@ -304,11 +347,113 @@ namespace Obj
                        || _properties.InherentProperties.CharacterInherentProperties.FlyType == FlyType.GroundFly);
         }
 
-        //是否在地面上
-        public bool IsOnGround()
+        #endregion
+
+        #region 工具方法-读
+
+        //获取状态
+        private ObjPosState GetPos(DisplacementInfo disInfo, ActionInfo actInfo)
         {
-            return ObjPosStateExtend.IsGround(_properties.DynamicProperties.CharacterProperties.PosState);
+            ObjPosState state = GetPosOnGround(disInfo, actInfo);
+            if (ObjPosState.None != state)
+            {
+                return state;
+            }
+
+            state = GetPosOnSky(disInfo, actInfo);
+            if (ObjPosState.None != state)
+            {
+                return state;
+            }
+            
+            state = GetPosOther(disInfo, actInfo);
+            return state;
         }
+
+        //获取地面状态
+        private ObjPosState GetPosOnGround(DisplacementInfo disInfo, ActionInfo actInfo)
+        {
+            //地面正常
+            if (actInfo.ActiveAction.type.IsGroundNormal())
+            {
+                return ObjPosState.Ground;
+            }
+            //地面-被控中
+            if (actInfo.ActiveAction.type.IsGroundControlled())
+            {
+                return ObjPosState.GroundControlled;
+            }
+            //地面-受伤中
+            if (actInfo.ActiveAction.type.IsGroundHurt())
+            {
+                return ObjPosState.GroundHurt;
+            }
+            
+            //地面-倒地中
+            if (actInfo.ActiveAction.type.IsGroundLie())
+            {
+                return ObjPosState.GroundLie;
+            }
+            //地面-起身中
+            if (actInfo.ActiveAction.type.IsGroundGetUp())
+            {
+                return ObjPosState.GroundGetUp;
+            }
+            
+            //其他情况，返回None
+            return ObjPosState.None;
+        }
+
+        //获取天空状态
+        private ObjPosState GetPosOnSky(DisplacementInfo disInfo, ActionInfo actInfo)
+        {
+            //空中-正常
+            if (actInfo.ActiveAction.type.IsSkyNormal())
+            {
+                return ObjPosState.Sky;
+            }
+            //空中-被控中
+            if (actInfo.ActiveAction.type.IsSkyControlled())
+            {
+                return ObjPosState.SkyControlled;
+            }
+            //空中-受伤中
+            if (actInfo.ActiveAction.type.IsSkyHurt())
+            {
+                return ObjPosState.SkyHurt;
+            }
+
+            //其他情况，返回None
+            return ObjPosState.None;
+        }
+
+        //后去其他状态
+        private ObjPosState GetPosOther(DisplacementInfo disInfo, ActionInfo actInfo)
+        {
+            //跳
+            if (actInfo.ActiveAction.type.IsJump())
+            {
+                return ObjPosState.Jump;
+            }
+            //上升
+            if (actInfo.ActiveAction.type.IsRise())
+            {
+                return ObjPosState.Rise;
+            }
+            //坠落
+            if (actInfo.ActiveAction.type.IsFall())
+            {
+                return ObjPosState.Fall;
+            }
+            //下落
+            if (actInfo.ActiveAction.type.IsDrop())
+            {
+                return ObjPosState.Drop;
+            }
+
+            //其他情况，返回Skill
+            return ObjPosState.Skill;
+        } 
 
         #endregion
         
@@ -355,6 +500,7 @@ namespace Obj
         //Unit的 InnerUpdate()调用
         private void UnitUpdate()
         {
+            //按顺序调用
             _actionUnit.InnerUpdate();
             _displacementUnit.InnerUpdate();
             _physicsUnit.InnerUpdate();
@@ -364,10 +510,32 @@ namespace Obj
         //Unit的 InnerLateUpdate()调用
         private void UnitLateUpdate()
         {
+            //按顺序调用
             _actionUnit.InnerLateUpdate();
             _displacementUnit.InnerLateUpdate();
             _physicsUnit.InnerLateUpdate();
+            _fightUnit.InnerLateUpdate();
             _graphicsUnit.InnerLateUpdate();
+        }
+        
+        //变更角色位置类型，根据位置+行为
+        private void ChangePosState()
+        {
+            //获取当前位置
+            DisplacementInfo disInfo = _displacementUnit.Info;
+            //获取当前行为
+            ActionInfo actInfo = _actionUnit.Info;
+            //判断是否在地面
+            ObjPosState nowState = GetPos(disInfo, actInfo);
+
+            ObjPosState preState = _properties.DynamicProperties.CharacterProperties.PosState;
+            _properties.DynamicProperties.CharacterProperties.PosState = nowState;
+
+            if (preState != nowState)
+            {
+                //发送事件
+                SendPosStateEvent(preState, nowState);
+            }
         }
         
         #endregion
@@ -407,6 +575,9 @@ namespace Obj
             {
                 unit.OnActionChangePost(@event);
             }
+            
+            //变更角色状态
+            ChangePosState();
         }
 
         //帧变更-变更前
@@ -432,6 +603,7 @@ namespace Obj
         {
             //TODO 先回调Action单元
             _actionUnit.CharacterDisplacementChange(displacementInfo);
+            _physicsUnit.CharacterDisplacementChange(displacementInfo);
         }
 
         //重设碰撞器回调
@@ -442,95 +614,48 @@ namespace Obj
         //碰撞进入
         private void OnColEnter(ColItemInfo info)
         {
-            //TODO 后续应该有DamageUnit来判断能够造成了伤害，才会调用ActionUnit去顿帧
+            //碰撞处理单元
+            FightInfo fightInfo = _fightUnit.OnColEnter(info);
+
+            if (fightInfo.FightResult.ResultType == FightResultType.Success
+                && fightInfo.FightResult.ResultType.HasDamage())
+            {
+                Log.Warn($"[OjbCore]物体:{info.OtherCore.ObjConfigSo.objShowName} " +
+                          $"使用:{info.OtherCore.GetActiveAction().actionShowName} " +
+                          $"攻击:{ObjConfigSo.objShowName}, " +
+                          $"造成:{fightInfo.FightResult.FinalDamage}点" +
+                          $"{fightInfo.FightResult.DamageType.ShowName()}", 
+                    LogModule.ObjCore);   
+            }
+
             //被动碰撞方回调
-            _actionUnit.ColEnterPassive(info);
+            _actionUnit.OnFightPassive(fightInfo);
             //主动碰撞方调用
-            info.OtherCore._actionUnit.ColEnterActive(info);
+            info.OtherCore._actionUnit.OnFightActive(fightInfo);
         }
         
         //碰撞离开
         private void OnColExit(ColItemInfo info)
         {
+            //碰撞处理单元
+            FightInfo fightInfo = _fightUnit.OnColExit(info);
+
+            if (fightInfo.FightResult.ResultType == FightResultType.Success
+                && fightInfo.FightResult.ResultType.HasDamage())
+            {
+                Log.Warn($"[OjbCore]物体:{info.OtherCore.ObjConfigSo.objShowName} " +
+                         $"使用:{info.OtherCore.GetActiveAction().actionShowName} " +
+                         $"攻击:{ObjConfigSo.objShowName}, " +
+                         "完成", 
+                    LogModule.ObjCore);   
+            }
+
             //TODO 暂无
         }
 
         #endregion
 
         #region 内部工具类
-
-        //角色物体状态标志位
-        private class CharacterFlags
-        {
-            /*******角色状态标识******/
-            
-            //是否地面
-            public bool OnGround;
-            //是否受击打断
-            public bool Interrupted;
-            //是否被控
-            public bool Manipulated;
-            //是否释放技能中
-            public bool Skill;
-            //是否倒地
-            public bool Collapse;
-            //起身中
-            public bool OnGetUp;
-            
-            /*******其他细节标识******/
-            
-            //跳跃时到达最高点，跳跃时有效
-            public bool ArriveHighest;
-
-            //计算出角色当前的状态
-            public ObjPosState GetState()
-            {
-                //地面-倒地中
-                if (Collapse && !OnGetUp)
-                {
-                    return OnGround ? ObjPosState.GroundLie : ObjPosState.SkyLie;
-                }
-
-                //地面-起身中
-                if (!Collapse && OnGetUp)
-                {
-                    return ObjPosState.GroundGetUp;
-                }
-
-                //地面-技能中 / 空中-技能中
-                if (Skill)
-                {
-                    return OnGround ? ObjPosState.GroundSkill : ObjPosState.SkySkill;
-                }
-
-                //地面-被控中 / 空中-被控中
-                if (Manipulated)
-                {
-                    return OnGround ? ObjPosState.GroundControlled : ObjPosState.SkyControlled;
-                }
-
-                //地面-受伤中 / 空中-受伤中
-                if (Interrupted)
-                {
-                    return OnGround ? ObjPosState.GroundHurt : ObjPosState.SkyHurt;
-                }
-                
-                //地面-正常 / 空中-正常
-                return OnGround ? ObjPosState.Ground : ObjPosState.Sky;
-            }
-
-            public static CharacterFlags BuildInit(bool isFlyObj, bool isFly)
-            {
-                CharacterFlags flags = new CharacterFlags();
-                flags.OnGround = !(isFlyObj && isFly);
-                flags.Interrupted = false;
-                flags.Manipulated = false;
-                flags.Skill = false;
-                flags.Collapse = false;
-                flags.OnGetUp = false;
-                return flags;
-            }
-        }
 
         #endregion
         

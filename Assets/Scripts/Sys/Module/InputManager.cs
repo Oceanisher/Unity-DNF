@@ -41,6 +41,8 @@ namespace Sys.Module
         {
             //TODO
             base.Init(type);
+
+            HasInit = true;
         }
 
         private void Update()

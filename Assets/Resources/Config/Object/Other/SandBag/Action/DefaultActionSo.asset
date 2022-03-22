@@ -13,49 +13,35 @@ MonoBehaviour:
   m_Name: DefaultActionSo
   m_EditorClassIdentifier: 
   actionName: "\u6C99\u888B-\u9ED8\u8BA4"
-  actionShowName: "\u57CE\u9547-\u9ED8\u8BA4"
+  actionShowName: "\u9759\u6B62"
   type: 1
   subType: 0
-  uuid: 300101001
+  uuid: 301100001
   loopType: 2
   actionFrame:
     aniFrameInfos:
     - spriteSequence: 0
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 1
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 2
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 3
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 4
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 5
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 6
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 7
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 8
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 9
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 10
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 11
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 12
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 13
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 14
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 15
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 16
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 17
-      aniFrameAudio: {fileID: 0}
+    frameFreezeInfo:
+      frameIndexes: 
+      time: 0
+    frameAudioInfos: []
     frameSwitchConditions:
     - frameIndexes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
       type: 1
@@ -73,9 +59,7 @@ MonoBehaviour:
         keys: []
       fallPercent:
         percent: 0
-    breakLimits: []
     orientationLimits: []
-    destroyLimits: []
   actionPhysics:
     infos:
     - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
@@ -98,8 +82,10 @@ MonoBehaviour:
         orientationSensitive: 1
         colPos: 1
   actionDisplacement:
+    resetInnerSpeedY: 0
     infos: []
   actionOther:
+    actionStartConditions: []
     actionStopCondition: []
     linkage:
       condition:

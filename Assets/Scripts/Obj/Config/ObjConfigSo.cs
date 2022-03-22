@@ -31,7 +31,7 @@ namespace Obj.Config
         
         //TODO 未来要在技能栏配置，现在先放在这里
         [Header("按键与行为映射配置")] 
-        public List<DictionaryPair<MapKeyInfo, ActionType>> keyTypeInputMap;
+        public List<DictionaryPair<ActionType, List<MapKeyInfo>>> keyTypeInputMap;
 
         //获取转换属性配置
         public ObjProperties GetProperties()
@@ -45,11 +45,11 @@ namespace Obj.Config
         
         //是否有按键对应的行为
         //按键判断有优先顺序，技能类优先，移动类后续
-        public ActionType GetActionByKeys(List<InputManager.KeyInfo> keyInfoList)
+        public HashSet<ActionType> GetActionByKeys(List<InputManager.KeyInfo> keyInfoList)
         {
             if (CollectionUtil.IsEmpty(keyTypeInputMap))
             {
-                return ActionType.None;
+                return new HashSet<ActionType>();
             }
 
             //对keyType进行排序
@@ -57,18 +57,23 @@ namespace Obj.Config
             tempList.AddRange(keyInfoList);
             tempList.Sort((a, b) => (int) b.KeyType - (int) a.KeyType);
 
+            HashSet<ActionType> typeList = new HashSet<ActionType>();
+            
             foreach (var key in tempList)
             {
                 foreach (var pair in keyTypeInputMap)
                 {
-                    if (key.KeyType == pair.key.type && pair.key.states.Contains(key.KeyState))
+                    foreach (var keyMap in pair.value)
                     {
-                        return pair.value;
+                        if (key.KeyType == keyMap.type && keyMap.states.Contains(key.KeyState))
+                        {
+                            typeList.Add(pair.key);
+                        }
                     }
                 }
             }
             
-            return ActionType.None;
+            return typeList;
         }
     }
     

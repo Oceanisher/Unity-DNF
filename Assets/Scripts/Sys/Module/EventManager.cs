@@ -7,12 +7,14 @@ using UnityEngine;
 namespace Sys.Module
 {
     //事件中枢
-    public class EventManager : AbstractManager<EventManager>, IKeyHandler
+    public class EventManager : AbstractManager<EventManager>
     {
         public override void Init(SceneType type)
         {
             //TODO
             base.Init(type);
+
+            HasInit = true;
         }
 
         #region IKeyHanlder 接口

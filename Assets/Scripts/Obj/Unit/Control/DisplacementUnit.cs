@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Obj.Config.Action.Structure;
 using Obj.Event;
+using Sys.Config;
+using Sys.Module.UI;
 using Tools;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,6 +26,7 @@ namespace Obj.Unit.Control
 
         //位移信息
         private readonly DisplacementInfo _info = DisplacementInfo.BuildInit();
+        public DisplacementInfo Info => _info;
 
         #region 位移处理
 
@@ -93,66 +96,25 @@ namespace Obj.Unit.Control
 
             //如果已经开始处理，那么就按照加速度处理
             _info.OnProcessMap.TryGetValue(info, out var hasProcessed);
-            _info.DisVelocityMap.TryGetValue(info, out var preVelocity);
-            //如果未开始处理，那么给予一个初速度
-            _info.AddOrUpdateVelocity(info, 
-                new Vector3(
-                    0f, 
-                    hasProcessed ? 
-                        preVelocity.y - info.jump.accelerate * TimeUtil.DeltaTime() : 
-                        info.jump.startVelocity,
-                    0f));
-
-            //标识为已处理
-            _info.MarkDisplacement(info);
+            if (!hasProcessed)
+            {
+                _info.GlobalSpeedYSet(info.jump.startVelocity);
+                //标识为已处理
+                _info.MarkDisplacement(info);
+            }
         }
         
-        //下落位移处理
-        private void Handle_Drop(Displacement info)
+        //处理全局Y轴速度
+        private void HandleGlobalY()
         {
-            if (null == info.drop)
+            //如果该行为需要中止全局位移Y轴，那么重置为0
+            if (Core.GetActiveDisplacement().resetInnerSpeedY)
             {
+                _info.GlobalSpeedYReset();
                 return;
             }
-            
-            //按照加速度处理
-            _info.OnProcessMap.TryGetValue(info, out var hasProcessed);
-            _info.DisVelocityMap.TryGetValue(info, out var preVelocity);
-            _info.AddOrUpdateVelocity(
-                info, 
-                new Vector3(
-                    0f, 
-                    hasProcessed ? 
-                        preVelocity.y - info.drop.accelerate * TimeUtil.DeltaTime() : 
-                        -info.drop.accelerate * TimeUtil.DeltaTime(), 
-                    0f));
-            
-            //标识为已处理
-            _info.MarkDisplacement(info);
-        }
-
-        //坠落位移处理
-        private void Handle_Fall(Displacement info)
-        {
-            if (null == info.fall)
-            {
-                return;
-            }
-            
-            //按照加速度处理
-            _info.OnProcessMap.TryGetValue(info, out var hasProcessed);
-            _info.DisVelocityMap.TryGetValue(info, out var preVelocity);
-            _info.AddOrUpdateVelocity(
-                info, 
-                new Vector3(
-                    0f, 
-                    hasProcessed ? 
-                        preVelocity.y - info.drop.accelerate * TimeUtil.DeltaTime() : 
-                        -info.drop.accelerate * TimeUtil.DeltaTime(), 
-                    0f));            // _info.AddSpeedY(-info.fall.accelerate * TimeUtil.DeltaTime());
-            
-            //标识为已处理
-            _info.MarkDisplacement(info);
+            //否则，按照加速度去修改
+            _info.GlobalSpeedYCalFrame();
         }
 
         #endregion
@@ -167,6 +129,14 @@ namespace Obj.Unit.Control
             {
                 return;
             }
+            //如果处于Hud控制的行为中，也不进行任何计算
+            if (HudManager.Instance.isActionHubControl)
+            {
+                return;
+            }
+            
+            //处理全局Y轴移动
+            HandleGlobalY();
             
             if (CollectionUtil.IsEmpty(_info.ActiveDisplacementInfos))
             {
@@ -189,17 +159,6 @@ namespace Obj.Unit.Control
                     case DisplacementType.Jump:
                         Handle_Jump(item);
                         break;
-                    //下落处理
-                    case DisplacementType.Drop:
-                        Handle_Drop(item);
-                        break;
-                    //坠落处理
-                    case DisplacementType.Fall:
-                        Handle_Fall(item);
-                        break;
-                    //滞空处理
-                    case DisplacementType.SkyStay:
-                        break;
                 }
             }
         }
@@ -209,6 +168,13 @@ namespace Obj.Unit.Control
         {
             //如果顿帧进行中，那么不进行任何移动计算，取消各类移动
             if (Core.GetActionFrameFreeze())
+            {
+                SetFinalVelocityOnFreeze();
+                return;
+            }
+            
+            //如果处于Hud控制的行为中，也不进行任何计算
+            if (HudManager.Instance.isActionHubControl)
             {
                 SetFinalVelocityOnFreeze();
                 return;
@@ -226,6 +192,12 @@ namespace Obj.Unit.Control
         {
             //如果顿帧进行中，那么不进行任何移动计算
             if (Core.GetActionFrameFreeze())
+            {
+                return;
+            }
+            
+            //如果处于Hud控制的行为中，也不进行任何计算
+            if (HudManager.Instance.isActionHubControl)
             {
                 return;
             }
@@ -269,11 +241,11 @@ namespace Obj.Unit.Control
             //处理下落到达地面
             //如果位置已经到达地面、并且目前是在下降，那么速度置为0
             if (Core.GetGraphicsGo().transform.localPosition.y <= 0
-                && _info.VelocityInner.y <= float.Epsilon)
+                && _info.VelocityInner.y <= 0)
             {
                 Core.GetGraphicsGo().transform.localPosition = Vector3.zero;
-                // Core.GetPhysicsGo().transform.localPosition = Vector3.zero;
-                _info.ResetInnerVelocityY();
+                _info.InnerVelocityYReset();
+                _info.GlobalSpeedYReset();
             }
             //处理其他空中情况
             else
@@ -339,7 +311,7 @@ namespace Obj.Unit.Control
 
             _info.AddOrUpdateVelocity(dis, isAdd ? temp : -temp);
         }
-
+        
         #endregion
 
         #endregion
@@ -425,8 +397,11 @@ namespace Obj.Unit.Control
             //当前处理帧位移的帧
             public int ActiveFrameIndex { get; private set; }
 
-            //当前的三轴速度-内部
+            //当前的三轴速度-内部，每帧通过计算得出
             public Vector3 VelocityInner { get; private set; }
+            
+            //内部Y轴速度，由于在空中需要各种其他行为，但是都在上升或下落过程中，所以该速度单独拿出来
+            public float GlobalVelocityInnerY { get; private set; }
             
             //是否在地面
             public bool OnGround { get; private set; }
@@ -451,6 +426,7 @@ namespace Obj.Unit.Control
                 info.DisVelocityMap = new Dictionary<Displacement, Vector3>();
                 info.ActiveFrameIndex = ActionConstant.InvalidFrameIndex;
                 info.VelocityInner = Vector3.zero;
+                info.GlobalVelocityInnerY = 0f;
                 info.OnGround = true;
                 info.OnRising = false;
                 info.Position = Vector3.zero;
@@ -468,17 +444,16 @@ namespace Obj.Unit.Control
             //重置角色其他数据
             public void ResetWhenActionChange(ActionChangeEvent changeEvent)
             {
-                //TODO 如果是变成跳起，那么重置到达顶点的动作
+                //如果是变成跳起，那么重置到达顶点的动作
                 if (changeEvent.PostActionSo.type == ActionType.CharacterJump)
                 {
                     ArriveHighest = false;
-                    OnRising = true;
                     Highest = 0f;
                 }
             }
 
             //重置Y轴速度为0
-            public void ResetInnerVelocityY()
+            public void InnerVelocityYReset()
             {
                 VelocityInner = new Vector3(VelocityInner.x, 0f, VelocityInner.z);
             }
@@ -493,12 +468,33 @@ namespace Obj.Unit.Control
                 DisVelocityMap.Add(dis, velocity);
             }
 
+            //设置全局Y轴速度
+            public void GlobalSpeedYSet(float speed)
+            {
+                GlobalVelocityInnerY = speed;
+            }
+
+            //重置全局Y轴速度
+            public void GlobalSpeedYReset()
+            {
+                GlobalVelocityInnerY = 0f;
+            }
+
+            //每帧处理全局Y轴速度
+            public void GlobalSpeedYCalFrame()
+            {
+                GlobalVelocityInnerY -= GameConst.GlobalAccelerate * TimeUtil.DeltaTime();
+            }
+
             //计算最终速度，落到VelocityInner上
             //TODO 目前只计算内部速度
             public void CalculateFinalVelocity()
             {
                 //先重置速度
                 VelocityInner = Vector3.zero;
+                
+                //加入全局Y轴速度
+                VelocityInner += new Vector3(0f, GlobalVelocityInnerY, 0f);
                 
                 if (CollectionUtil.IsEmpty(DisVelocityMap))
                 {
@@ -530,21 +526,24 @@ namespace Obj.Unit.Control
             //状态变更
             public void StateChange(ObjCore core)
             {
-                //状态变更
+                //是否在地面
                 OnGround = core.GetGraphicsGo().transform.localPosition.y <= float.Epsilon;
-                bool preRising = OnRising;
+
+                //是否上升中
+                bool preOnRising = OnRising;
                 OnRising = VelocityInner.y > float.Epsilon;
-                //如果之前是上升、现在不是了，那么说明到达了最高点
-                if (preRising && !OnRising)
+                
+                //是否到达最高点，即Y轴速度小于0
+                if (preOnRising && !OnRising)
                 {
                     ArriveHighest = true;
                     Highest = core.GetGraphicsGo().transform.localPosition.y;
                 }
-                //如果之前不是上升，现在是上升，那么说明是上升开始
-                else if (!preRising && OnRising)
-                {
-                    ArriveHighest = false;
-                }
+                
+                //当前位置
+                Vector3 worldPos = core.transform.position;
+                Vector3 localPos = core.GetGraphicsGo().transform.localPosition;
+                Position = new Vector3(worldPos.x, localPos.y, worldPos.y);
             }
             
             //添加新的位移处理
@@ -572,7 +571,6 @@ namespace Obj.Unit.Control
             {
                 ActiveDisplacementInfos.Clear();
                 OnProcessMap.Clear();
-                //TODO 后续有些行为结束还能导致位移的技能，需要其他处理
                 DisVelocityMap.Clear();
             }
 
@@ -600,6 +598,18 @@ namespace Obj.Unit.Control
                 }
 
                 return (int)((Highest - Position.y) / Highest * 100);
+            }
+
+            //到顶点
+            public bool ReachTop()
+            {
+                return ArriveHighest;
+            }
+
+            //到地面
+            public bool ReachGround()
+            {
+                return OnGround;
             }
         }
 

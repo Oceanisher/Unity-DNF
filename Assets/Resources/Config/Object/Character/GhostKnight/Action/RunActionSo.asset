@@ -21,21 +21,25 @@ MonoBehaviour:
   actionFrame:
     aniFrameInfos:
     - spriteSequence: 105
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 106
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 107
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 108
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 109
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 110
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 111
-      aniFrameAudio: {fileID: 0}
     - spriteSequence: 112
-      aniFrameAudio: {fileID: 0}
+    frameFreezeInfo:
+      frameIndexes: 
+      time: 0
+    frameAudioInfos:
+    - frameIndexes: 0300000007000000
+      audioClipList:
+      - {fileID: 8300000, guid: 81191169f20d94bd1bcdbe98918a0e58, type: 3}
+      - {fileID: 8300000, guid: 76f989e3fdda845588c9d9fda94e845b, type: 3}
+      - {fileID: 8300000, guid: 8da8c987784a841b48c66e34ae5501df, type: 3}
+      loopType: 1
+      chooseType: 2
+      volumePercent: 20
     frameSwitchConditions:
     - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
       type: 1
@@ -53,13 +57,6 @@ MonoBehaviour:
         keys: []
       fallPercent:
         percent: 0
-    breakLimits:
-    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
-      type: 1
-      condition: 1
-    - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
-      type: 2
-      condition: 1
     orientationLimits:
     - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
       type: 1
@@ -75,10 +72,29 @@ MonoBehaviour:
         - key: 3
           keyStateList: 01000000020000000400000005000000
         orientation: 2
-    destroyLimits: []
   actionPhysics:
-    infos: []
+    infos:
+    - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+      judgeType: 3
+      damage:
+        type: 0
+        damageOnce:
+          damage: 0
+      colList:
+      - frameConfig:
+        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+          offset: {x: 0.1536648, y: 0.5254339}
+          size: {x: 0.474566, y: 1}
+        orientationSensitive: 1
+        colPos: 2
+      - frameConfig:
+        - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
+          offset: {x: 0, y: 0.00000001490116}
+          size: {x: 0.5215769, y: 0.2751165}
+        orientationSensitive: 1
+        colPos: 1
   actionDisplacement:
+    resetInnerSpeedY: 0
     infos:
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
@@ -95,11 +111,6 @@ MonoBehaviour:
           keyStateList: 04000000050000000100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
       move:
@@ -115,11 +126,6 @@ MonoBehaviour:
           keyStateList: 04000000050000000100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
       move:
@@ -135,11 +141,6 @@ MonoBehaviour:
           keyStateList: 04000000050000000100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
     - frameSequence: 0000000001000000020000000300000004000000050000000600000007000000
       type: 2
       move:
@@ -155,12 +156,11 @@ MonoBehaviour:
           keyStateList: 04000000050000000100000002000000
       jump:
         startVelocity: 0
-        accelerate: 0
-      drop:
-        accelerate: 0
-      fall:
-        accelerate: 0
   actionOther:
+    actionStartConditions:
+    - type: 1
+      skyHeightOver:
+        height: 0
     actionStopCondition:
     - frameIndexes: 0000000001000000020000000300000004000000050000000600000007000000
       type: 1

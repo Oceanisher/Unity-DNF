@@ -41,20 +41,27 @@ namespace Obj.Config.Property
     }
 
     //角色位置状态
+    //带有Ground、Sky的都是明确所在位置的，其他的需要借助Displacement来判断
     public enum ObjPosState
     {
         None,//无
-        Ground,//地面-正常
+        
+        Ground,//地面-正常，静止+走+跑
         GroundControlled,//地面-被控中
         GroundHurt,//地面-受伤中
-        GroundSkill,//地面-技能中
         GroundLie,//地面-倒地中
         GroundGetUp,//地面-起身中
-        Sky,//空中-正常
+        
+        Sky,//空中-正常，跳+下落
         SkyControlled,//空中-被控中
         SkyHurt,//空中-受伤中
-        SkySkill,//空中-技能中
-        SkyLie,//空中-倒地中
+        
+        Jump,//跳起
+        Rise,//上升
+        Drop,//下落
+        Fall,//坠落
+
+        Skill,//技能中
     }
 
     //角色位置状态扩展
@@ -69,43 +76,44 @@ namespace Obj.Config.Property
             GroundList.Add(ObjPosState.GroundControlled);
             GroundList.Add(ObjPosState.GroundHurt);
             GroundList.Add(ObjPosState.GroundLie);
-            GroundList.Add(ObjPosState.GroundSkill);
             GroundList.Add(ObjPosState.GroundGetUp);
             SkyList.Add(ObjPosState.Sky);
             SkyList.Add(ObjPosState.SkyControlled);
             SkyList.Add(ObjPosState.SkyHurt);
-            SkyList.Add(ObjPosState.SkyLie);
-            SkyList.Add(ObjPosState.SkySkill);
         }
         
         //是否在地面
-        public static bool IsGround(ObjPosState state)
+        public static bool IsGround(this ObjPosState state)
         {
             return GroundList.Contains(state);
         }
 
         //是否在空中
-        public static bool IsSKy(ObjPosState state)
+        public static bool IsSKy(this ObjPosState state)
         {
             return SkyList.Contains(state);
         }
+        //
+        // //是否是处于不能释放技能状态
+        // //TODO 未来例如替身草人等，可以在受伤等状态下释放
+        // public static bool IsCantSkillState(this ObjPosState state)
+        // {
+        //     return IsHurt(state) || IsControlled(state)
+        //                          || ObjPosState.GroundLie == state
+        //                          || ObjPosState.GroundGetUp == state;
+        // }
+        //
         
         //是否受伤
-        public static bool IsHurt(ObjPosState state)
+        public static bool IsHurt(this ObjPosState state)
         {
             return state == ObjPosState.GroundHurt || state == ObjPosState.SkyHurt;
         }
         
         //是否受控
-        public static bool IsControlled(ObjPosState state)
+        public static bool IsControlled(this ObjPosState state)
         {
             return state == ObjPosState.GroundControlled || state == ObjPosState.SkyControlled;
-        }
-        
-        //是否技能释放中
-        public static bool IsSkill(ObjPosState state)
-        {
-            return state == ObjPosState.GroundSkill || state == ObjPosState.SkySkill;
         }
     }
 }

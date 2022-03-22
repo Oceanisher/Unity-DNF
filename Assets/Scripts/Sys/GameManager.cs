@@ -11,8 +11,11 @@ using UnityEngine;
 namespace Sys
 {
     //游戏核心管理器
-    public class GameManager : MonoSingleton<GameManager>
+    public class GameManager : MonoSingleton<GameManager>, IInit
     {
+        //是否初始化完成
+        public bool HasInit { set;get; }
+        
         //TODO 游戏场景，默认为城镇类型。应该是MapManager发送过来的。
         private SceneType _sceneType = SceneType.Town;
         public SceneType SceneType => _sceneType;
@@ -30,9 +33,12 @@ namespace Sys
         private MapManager _mapManager;
         //事件中枢
         private EventManager _eventManager;
+        //音频中枢
+        private AudioManager _audioManager;
+        //全局物料管理器
+        private GlobalResManager _globalResManager;
         //HUD中枢
-        [SerializeField]
-        private HudManager hudManager;
+        private HudManager _hudManager;
 
         private void Start()
         {
@@ -53,13 +59,20 @@ namespace Sys
             _inputManager = GetComponent<InputManager>();
             _mapManager = GetComponent<MapManager>();
             _eventManager = GetComponent<EventManager>();
-
+            _audioManager = GetComponent<AudioManager>();
+            _globalResManager = GetComponent<GlobalResManager>();
+            _hudManager = GetComponent<HudManager>();
+            
             _inputManager.Init(_sceneType);
             _mapManager.Init(_sceneType);
             _eventManager.Init(_sceneType);
-            hudManager.Init(_sceneType);
+            _audioManager.Init(_sceneType);
+            _globalResManager.Init(_sceneType);
+            _hudManager.Init(_sceneType);
 
             _inputManager.OnKeyEvent += OnKeyEvent;
+
+            HasInit = true;
         }
 
         #region 事件处理
@@ -69,7 +82,7 @@ namespace Sys
         {
             _mapManager.HandleKeys(keyInfos);
             _eventManager.HandleKeys(keyInfos);
-            hudManager.HandleKeys(keyInfos);
+            _hudManager.HandleKeys(keyInfos);
         }
 
         #endregion

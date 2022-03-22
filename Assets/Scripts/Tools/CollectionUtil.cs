@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Tools
 {
@@ -7,6 +8,12 @@ namespace Tools
     {
         //是否为空
         public static bool IsEmpty<T>(T collection) where T : ICollection
+        {
+            return null == collection || collection.Count == 0;
+        }
+        
+        //是否为空
+        public static bool IsEmpty<T>(ISet<T> collection)
         {
             return null == collection || collection.Count == 0;
         }

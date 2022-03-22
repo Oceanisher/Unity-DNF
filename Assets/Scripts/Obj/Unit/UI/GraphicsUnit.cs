@@ -12,9 +12,6 @@ namespace Obj.Unit.UI
     //图形单元
     public class GraphicsUnit : AbstractObjUnit
     {
-        //精灵渲染器-Body
-        private SpriteRenderer _bodyRenderer;
-
         //动画分片与精灵渲染器映射
         private Dictionary<AniPartType, SpriteRenderer> _rendererMap;
         //分片与精灵渲染器映射

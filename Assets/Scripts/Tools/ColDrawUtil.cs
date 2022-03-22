@@ -125,19 +125,14 @@ namespace Tools
             {
                 Vector3 center = obj.transform.position + (Vector3) boxCol.offset;
                 Gizmos.DrawWireCube(center, boxCol.size);
-                // Vector3 halfSize = boxCol.size / 2;
-                // Vector3 leftTop = new Vector3(center.x - halfSize.x, center.y + halfSize.y, center.z);
-                // Vector3 rightBottom = new Vector3(center.x + halfSize.x, center.y - halfSize.y, center.z);
-                // Vector3 leftBottom = new Vector3(center.x - halfSize.x, center.y - halfSize.y, center.z);
-                // Vector3 rightTop = new Vector3(center.x + halfSize.x, center.y + halfSize.y, center.z);
-                // Gizmos.DrawLine(leftTop, rightBottom);
-                // Gizmos.DrawLine(leftBottom, rightTop);
+                
+                /***************碰撞框中画横线***************/
                 Vector3 halfSize = boxCol.size / 2;
                 Vector3 leftTop = new Vector3(center.x - halfSize.x, center.y + halfSize.y, center.z);
                 Vector3 rightBottom = new Vector3(center.x + halfSize.x, center.y - halfSize.y, center.z);
                 Vector3 leftBottom = new Vector3(center.x - halfSize.x, center.y - halfSize.y, center.z);
                 Vector3 rightTop = new Vector3(center.x + halfSize.x, center.y + halfSize.y, center.z);
-
+                
                 float yPos = leftTop.y - YInterval;
                 while (yPos > rightBottom.y)
                 {

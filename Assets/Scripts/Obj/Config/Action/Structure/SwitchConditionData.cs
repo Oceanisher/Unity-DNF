@@ -99,9 +99,53 @@ namespace Obj.Config.Action.Structure
         // ConditionHorizontal,//条件-世界水平位置
         // ConditionVertical,//条件-世界竖直位置
     }
+
+    //FrameSwitchType扩展
+    public static class FrameSwitchTypeExtend
+    {
+        //判断是否是时间类型
+        public static bool IsTimeType(this FrameSwitchType type)
+        {
+            return type == FrameSwitchType.Time
+                   || type == FrameSwitchType.TimeOrKey
+                   || type == FrameSwitchType.TimeOrKeyInvalid;
+        }
+    }
     
     #endregion
     
+    #region 行为开始
+    
+    //行为开始条件
+    [Serializable]
+    public class ActionStartCondition
+    {
+        [Header("行为开始类型")]
+        public ActionStartType type;
+        
+        [Header("行为开始类型-天空普通+超过一定高度")]
+        public ActionStartSkyHeightOver skyHeightOver;
+    }
+    
+    //行为开始类型
+    [Serializable]
+    public enum ActionStartType
+    {
+        None,
+        Ground,//地面普通触发
+        Sky,//天空普通触发
+        SkyHeightOver,//天空普通+跳、上升、下落+超过一定高度
+    }
+
+    //行为开始类型-天空普通+超过一定高度
+    [Serializable]
+    public class ActionStartSkyHeightOver
+    {
+        [Header("高度配置")]
+        public float height;
+    }
+    
+    #endregion
     
     #region 行为切换
 
@@ -141,14 +185,18 @@ namespace Obj.Config.Action.Structure
         // ConditionLocalVertical,//条件-本地竖直位置
         // ConditionLocalVerticalPercent,//条件-本地竖直位置百分比
         // FallPercent,//条件-下落时距离地面的距离百分比
-        JumpToTop,//条件-跳跃时到达最高点
-        FallToGround,//条件-下落至地面
         // ConditionHorizontal,//条件-世界水平位置
         // ConditionVertical,//条件-世界竖直位置
+        
+        //TODO 目前删除这几条，逻辑放到代码中、降低复杂度
+        // JumpToTop,//条件-跳跃时到达最高点
+        // RiseToTop,//条件-上升时到达最高点
+        // DropToGround,//条件-下落至地面
+        // FallToGround,//条件-坠落至地面
     }
 
     #endregion
-    
+
     #region 联动切换
 
     //联动切换条件

@@ -20,10 +20,6 @@ namespace Obj.Config.Action.Structure
         public DisplacementMoveKeyHold moveKeyHold;
         [Header("位移-跳跃")]
         public DisplacementJump jump;
-        [Header("位移-坠落")]
-        public DisplacementFallOrDrop drop;
-        [Header("位移-坠落")]
-        public DisplacementFallOrDrop fall;
     }
     
 
@@ -55,17 +51,15 @@ namespace Obj.Config.Action.Structure
     {
         [Header("初始速度，游戏米/秒")]
         public float startVelocity;
-        [Header("加速度，游戏米/秒")]
-        public float accelerate;
     }
     
-    //位移配置-下落/坠落
-    [Serializable]
-    public class DisplacementFallOrDrop
-    {
-        [Header("加速度")]
-        public float accelerate;
-    }
+    // //位移配置-下落/坠落
+    // [Serializable]
+    // public class DisplacementFallOrDrop
+    // {
+    //     [Header("加速度")]
+    //     public float accelerate;
+    // }
     
     //按键限制条件
     [Serializable]
@@ -90,9 +84,9 @@ namespace Obj.Config.Action.Structure
         Move,//移动，XZ轴匀速移动
         MoveKeyHold,//按键移动，XZ轴匀速移动
         Jump,//跳起类型：给予一个初速度、以及反向的加速度
-        Drop,//下落类型：从顶点下落、以及同向的加速度
-        Fall,//坠落类型：从顶点下落、以及同向的加速度
-        SkyStay,//滞空类型
+        // Drop,//下落类型：从顶点下落、以及同向的加速度
+        // Fall,//坠落类型：从顶点下落、以及同向的加速度
+        // SkyStay,//滞空类型
         //Blink,//瞬移到某个点
     }
     

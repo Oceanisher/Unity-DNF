@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc26f2e005b47079e300aabbf8cca44, type: 3}
+  m_Name: HurtActionSo
+  m_EditorClassIdentifier: 
+  actionName: "\u6C99\u888B-\u53D7\u51FB"
+  actionShowName: "\u53D7\u51FB"
+  type: 11
+  subType: 0
+  uuid: 301100002
+  loopType: 1
+  actionFrame:
+    aniFrameInfos:
+    - spriteSequence: 18
+    - spriteSequence: 22
+    - spriteSequence: 23
+    - spriteSequence: 24
+    - spriteSequence: 25
+    - spriteSequence: 26
+    - spriteSequence: 27
+    - spriteSequence: 28
+    - spriteSequence: 29
+    - spriteSequence: 30
+    frameFreezeInfo:
+      frameIndexes: 
+      time: 0
+    frameAudioInfos: []
+    frameSwitchConditions:
+    - frameIndexes: 010000000200000003000000040000000500000006000000070000000800000009000000
+      type: 1
+      time:
+        time: 50
+      timeOrKey:
+        time: 0
+        keys: []
+      timeOrKeyInvalid:
+        time: 0
+        keys: []
+      key:
+        keys: []
+      keyInvalid:
+        keys: []
+      fallPercent:
+        percent: 0
+    - frameIndexes: 00000000
+      type: 1
+      time:
+        time: 200
+      timeOrKey:
+        time: 0
+        keys: []
+      timeOrKeyInvalid:
+        time: 0
+        keys: []
+      key:
+        keys: []
+      keyInvalid:
+        keys: []
+      fallPercent:
+        percent: 0
+    orientationLimits: []
+  actionPhysics:
+    infos:
+    - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+      judgeType: 3
+      damage:
+        type: 0
+        damageOnce:
+          damage: 0
+      colList:
+      - frameConfig:
+        - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+          offset: {x: -0.6412871, y: 1.026059}
+          size: {x: 0.6250938, y: 1.513029}
+        orientationSensitive: 1
+        colPos: 2
+      - frameConfig:
+        - frameSequence: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f0000001000000011000000
+          offset: {x: -0.5430021, y: 0.00000001490116}
+          size: {x: 0.6399684, y: 0.2751165}
+        orientationSensitive: 1
+        colPos: 1
+  actionDisplacement:
+    resetInnerSpeedY: 0
+    infos: []
+  actionOther:
+    actionStartConditions: []
+    actionStopCondition: []
+    linkage:
+      condition:
+        type: 0
+        timeLimitSame:
+          startFrame: 0
+          time: 0
+      linkageAction: {fileID: 0}

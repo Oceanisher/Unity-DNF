@@ -9,14 +9,21 @@ namespace Sys.Module.UI
     //HUD中枢
     public class HudManager : AbstractManager<HudManager>, IKeyHandler
     {
-        [Header("测试行为Bar")]
-        [SerializeField]
-        private TestActionBar testActionBar;
+        //测试行为Bar
+        private TestActionBar _testActionBar;
+
+        //是否是Hub控制行为
+        [HideInInspector]
+        public bool isActionHubControl;
         
         public override void Init(SceneType type)
         {
             base.Init(type);
-            testActionBar.Init(MapManager.Instance.PlayerCore);
+
+            _testActionBar = transform.Find(GameConst.HudPath_TestActionBarPath).GetComponent<TestActionBar>();
+            _testActionBar.Init(MapManager.Instance.PlayerCore);
+
+            HasInit = true;
         }
 
         //处理按键
@@ -40,7 +47,7 @@ namespace Sys.Module.UI
         //隐藏/展示测试行为Bar
         private void ToggleTestActionBar()
         {
-            testActionBar.gameObject.SetActive(!testActionBar.gameObject.activeSelf);
+            _testActionBar.gameObject.SetActive(!_testActionBar.gameObject.activeSelf);
         }
 
         #region IKeyHanlder 接口
