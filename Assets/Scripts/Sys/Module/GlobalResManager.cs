@@ -17,5 +17,10 @@ namespace Sys.Module
         [SerializeField]
         private List<AudioClip> beHitAudioClips;
         public List<AudioClip> BeHitAudioClips => beHitAudioClips;
+        
+        [Header("被击中音频音量百分比，0~100")]
+        [SerializeField]
+        private int beHitVolumePercent;
+        public int BeHitVolumePercent => beHitVolumePercent;
     }
 }

@@ -630,8 +630,11 @@ namespace Obj
 
             //被动碰撞方回调
             _actionUnit.OnFightPassive(fightInfo);
+            //被动方音频回调
+            _audioUnit.OnFightPassive(fightInfo);
             //主动碰撞方调用
             info.OtherCore._actionUnit.OnFightActive(fightInfo);
+            
         }
         
         //碰撞离开

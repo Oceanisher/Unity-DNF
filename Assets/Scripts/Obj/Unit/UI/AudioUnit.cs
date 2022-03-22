@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Obj.Config.Action.Structure;
 using Obj.Event;
+using Obj.Unit.Control;
+using Sys.Module;
 using Tools;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -19,7 +21,39 @@ namespace Obj.Unit.UI
         //帧音频配置与音频选择映射，用于顺序播放音频的情况
         private Dictionary<FrameAudioInfo, int> _frameAudioIndexMap;
 
-        #region 音频处理
+        #region 外部接口
+
+        //被击中音效（例如受击等）
+        public void OnFightPassive(FightInfo fightInfo)
+        {
+            HandleBeHitAudio();
+        }
+
+        #endregion
+
+        #region 被动音频处理
+
+        //受击音频处理
+        private void HandleBeHitAudio()
+        {
+            List<AudioClip> audioClips = GlobalResManager.Instance.BeHitAudioClips;
+            if (CollectionUtil.IsEmpty(audioClips))
+            {
+                return;
+            }
+
+            AudioClip clip = audioClips[Random.Range(0, audioClips.Count)];
+            
+            //设置音量
+            _passiveAs.volume = GlobalResManager.Instance.BeHitVolumePercent / 100f;
+            //播放
+            _passiveAs.clip = clip;
+            _passiveAs.Play();
+        }
+
+        #endregion
+        
+        #region 主动音频处理
         
         //处理行为改变
         private void HandleActionChange()
