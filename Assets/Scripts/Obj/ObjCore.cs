@@ -123,6 +123,7 @@ namespace Obj
             _physicsUnit.OnReColPost += OnReColPost;
             _physicsUnit.OnColEnter += OnColEnter;
             _physicsUnit.OnColExit += OnColExit;
+            _physicsUnit.OnColClear += OnColClear;
 
             // _characterFlags = CharacterFlags.BuildInit(Properties_IsFlyObj(), false);
 
@@ -617,6 +618,11 @@ namespace Obj
             //碰撞处理单元
             FightInfo fightInfo = _fightUnit.OnColEnter(info);
 
+            if (null == fightInfo)
+            {
+                return;
+            }
+
             if (fightInfo.FightResult.ResultType == FightResultType.Success
                 && fightInfo.FightResult.ResultType.HasDamage())
             {
@@ -632,9 +638,9 @@ namespace Obj
             _actionUnit.OnFightPassive(fightInfo);
             //被动方音频回调
             _audioUnit.OnFightPassive(fightInfo);
+            
             //主动碰撞方调用
             info.OtherCore._actionUnit.OnFightActive(fightInfo);
-            
         }
         
         //碰撞离开
@@ -642,6 +648,11 @@ namespace Obj
         {
             //碰撞处理单元
             FightInfo fightInfo = _fightUnit.OnColExit(info);
+            
+            if (null == fightInfo)
+            {
+                return;
+            }
 
             if (fightInfo.FightResult.ResultType == FightResultType.Success
                 && fightInfo.FightResult.ResultType.HasDamage())
@@ -654,6 +665,13 @@ namespace Obj
             }
 
             //TODO 暂无
+        }
+
+        //碰撞信息清除
+        private void OnColClear(List<ColItemInfo> infoList)
+        {
+            //被动碰撞方回调
+            _fightUnit.OnColClear(infoList);
         }
 
         #endregion

@@ -19,6 +19,12 @@ namespace Obj.Unit.Control
         //伤害碰撞事件发生
         public FightInfo OnColEnter(ColItemInfo info)
         {
+            //TODO 已经存在或者处理次数超过0，那么暂不处理
+            if (_info.HasAdded(info) || info.HandleCount > 0)
+            {
+                return null;
+            }
+
             //TODO 暂时啥也不干，只返回伤害结果
             OnEnterPre(info, out var fightInfo);
             OnEnter(fightInfo);
@@ -30,12 +36,24 @@ namespace Obj.Unit.Control
         //伤害碰撞事件结束
         public FightInfo OnColExit(ColItemInfo info)
         {
+            //TODO 如果处理次数超过0，那么暂不处理
+            if (info.HandleCount > 0)
+            {
+                return null;
+            }
+            
             //TODO 暂时啥也不干
             OnExitPre(info, out var fightInfo);
             OnExit(fightInfo);
             OnExitPost(info, fightInfo);
             
             return fightInfo;
+        }
+
+        //碰撞清除
+        public void OnColClear(List<ColItemInfo> infoList)
+        {
+            OnClear(infoList);
         }
 
         #region 战斗过程处理
@@ -78,11 +96,17 @@ namespace Obj.Unit.Control
         {
             
         }
+
+        //清除碰撞
+        private void OnClear(List<ColItemInfo> infoList)
+        {
+            _info.ClearInfo(infoList);
+        }
         
         //碰撞离开后置处理
         private void OnExitPost(ColItemInfo info, FightInfo fightInfo)
         {
-            _info.ExitPost(info);
+            
         }
 
         #endregion
@@ -118,6 +142,13 @@ namespace Obj.Unit.Control
             return info;
         }
 
+        //是否已经存在了
+        public bool HasAdded(ColItemInfo colItemInfo)
+        {
+            FightInfoMap.TryGetValue(colItemInfo, out var colIteInfo);
+            return null != colIteInfo;
+        }
+
         //碰撞进入前置处理
         public void EnterPre(ColItemInfo colItemInfo, out FightInfo fightInfo)
         {
@@ -144,10 +175,13 @@ namespace Obj.Unit.Control
             fightInfo.FightResult = result;
         }
 
-        //碰撞离开-后置处理
-        public void ExitPost(ColItemInfo colItemInfo)
+        //清除信息
+        public void ClearInfo(List<ColItemInfo> infoList)
         {
-            FightInfoMap.Remove(colItemInfo);
+            foreach (var item in infoList)
+            {
+                FightInfoMap.Remove(item);
+            }
         }
     }
 

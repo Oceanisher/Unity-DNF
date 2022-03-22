@@ -25,6 +25,8 @@ namespace Obj.Unit.Control
         public UnityAction<ColItemInfo> OnColEnter;
         //碰撞结束回调
         public UnityAction<ColItemInfo> OnColExit;
+        //碰撞信息清除
+        public UnityAction<List<ColItemInfo>> OnColClear;
 
         #region 碰撞器变量
 
@@ -307,7 +309,7 @@ namespace Obj.Unit.Control
                     removeList.Add(item.Key);
                     continue;
                 }
-                //XZ/Y状态相同、并且未处理，那么处理
+                //未处理，那么处理
                 if (!item.Value.Processed)
                 {
                     processList.Add(item.Key);
@@ -319,7 +321,15 @@ namespace Obj.Unit.Control
         private void ColProcessPost(List<string> removeList, List<string> processList)
         {
             //移除处理
-            _colInfo.RemoveCol(removeList);
+            if (!CollectionUtil.IsEmpty(removeList))
+            {
+                _colInfo.RemoveCol(removeList, out var removeColList);
+                if (!CollectionUtil.IsEmpty(removeColList))
+                {
+                    OnColClear?.Invoke(removeColList);
+                }
+            }
+
             //其他处理
             foreach (var item in processList)
             {
@@ -331,11 +341,6 @@ namespace Obj.Unit.Control
                 //碰撞进入处理
                 if (itemInfo.IsEnterProcess())
                 {
-                    // Log.Error($"[Physics]物体:{itemInfo.OtherCore.ObjConfigSo.objShowName} " +
-                    //           $"使用:{itemInfo.OtherCore.GetActiveAction().actionShowName} " +
-                    //           $"攻击了:{Core.ObjConfigSo.objShowName}, " +
-                    //           $"造成:{itemInfo.OtherPhy.damage.damageOnce.damage}伤害", 
-                    //     LogModule.ObjCore);
                     OnColEnter?.Invoke(itemInfo);
                     //设置处理完成标识位
                     itemInfo.SetProcessed();
@@ -343,14 +348,11 @@ namespace Obj.Unit.Control
                 //碰撞离开处理
                 if (itemInfo.IsExitProcess())
                 {
-                    // Log.Error($"[Physics]物体:{itemInfo.OtherCore.ObjConfigSo.objShowName} " +
-                    //           $"使用:{itemInfo.OtherCore.GetActiveAction().actionShowName} " +
-                    //           $"攻击了:{Core.ObjConfigSo.objShowName}, " +
-                    //           "完成", 
-                    //     LogModule.ObjCore);
                     OnColExit?.Invoke(itemInfo);
                     //设置处理完成标识位
                     itemInfo.SetProcessed();
+                    //每次离开代表一次处理循环
+                    itemInfo.HandleCountIncrement();
                 }
             }
         }
@@ -632,16 +634,17 @@ namespace Obj.Unit.Control
             }
             
             //移除碰撞
-            public void RemoveCol(List<string> removeList)
+            public void RemoveCol(List<string> removeList, out List<ColItemInfo> infoList)
             {
-                if (CollectionUtil.IsEmpty(removeList))
-                {
-                    return;
-                }
-
+                infoList = new List<ColItemInfo>();
                 foreach (var item in removeList)
                 {
-                    colMap.Remove(item);
+                    if (colMap.ContainsKey(item))
+                    {
+                        colMap.TryGetValue(item, out var temp);
+                        infoList.Add(temp);
+                        colMap.Remove(item);
+                    }
                 }
             }
         }
@@ -675,6 +678,8 @@ namespace Obj.Unit.Control
             public bool ValidCol { get; private set; }
             //是否已经处理过，仅当ColXz、ColY状态相同时才会变为true
             public bool Processed { get; private set; }
+            //重复进入次数
+            public int HandleCount { get; private set; }
 
             public static ColItemInfo Build(PhysicsColUnitItem self, PhysicsColUnitItem other)
             {
@@ -691,8 +696,15 @@ namespace Obj.Unit.Control
                 info.ColXz = other.PhyCol.colPos == ColPos.XZ;
                 info.ColY = other.PhyCol.colPos == ColPos.Y;
                 info.ValidCol = false;
-                info.Processed = info.ColXz ^ info.ColY;
+                info.Processed = true;
+                info.HandleCount = 0;
                 return info;
+            }
+
+            //处理次数自增，一个Enter+Exit循环算作一次
+            public void HandleCountIncrement()
+            {
+                HandleCount++;
             }
 
             //变更碰撞状态
@@ -707,12 +719,15 @@ namespace Obj.Unit.Control
                     ColY = isCol;
                 }
 
-                if (ColY && ColXz)
+                //只要有一个碰撞转变为false，就无效了
+                bool preValidCol = ValidCol;
+                ValidCol = ColY && ColXz;
+
+                //原先已处理、并且是从无效->有效、有效->无效，才会转变为未处理
+                if (Processed)
                 {
-                    ValidCol = true;
+                    Processed = !(preValidCol ^ ValidCol);
                 }
-                
-                Processed = ColXz ^ ColY;
             }
 
             //设置已处理标识位
@@ -724,13 +739,13 @@ namespace Obj.Unit.Control
             //是否是完全碰撞的进入处理
             public bool IsEnterProcess()
             {
-                return ValidCol && !Processed && ColXz == true && ColY == true;
+                return ValidCol && !Processed;
             }
 
-            //是否是完全离开的进入处理
+            //是否离开
             public bool IsExitProcess()
             {
-                return ValidCol && !Processed && ColXz == false && ColY == false;
+                return !ValidCol && !Processed;
             }
         }
         
