@@ -41,7 +41,7 @@ namespace Sys.Module
             _playerCore.Init();
             _sandBagCore = sandBag.GetComponent<ObjCore>();
             _sandBagCore.Init();
-
+            
             //TODO
             base.Init(type);
             
