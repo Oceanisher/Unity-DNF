@@ -45,8 +45,12 @@ namespace App.Editor.Build
             
             //获取指令中的所有参数
             string[] args = System.Environment.GetCommandLineArgs();
-            Debug.Log($"[DefaultBuilder]CommandLine : {args}");
-            
+            Debug.Log("[DefaultBuilder]CommandLine start.");
+            foreach (var str in args)
+            {
+                Debug.Log($"{str}");
+            }
+            Debug.Log("[DefaultBuilder]CommandLine end.");
             foreach (var arg in args)
             {
                 //如果是 "--" 指令

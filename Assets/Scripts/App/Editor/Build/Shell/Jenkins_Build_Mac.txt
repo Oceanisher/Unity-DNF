@@ -50,12 +50,12 @@ pipeline {
         stage('Build') { 
             steps {
                 //使用Unity命令构建 
-                sh "${BUILD_UNITY} -quit -batchmode -nographics \"
-                sh "-projectPath ${BUILD_BASE_PATH}/${BUILD_SOURCE_PATH} \"
-                sh "-logFile ${BUILD_BASE_PATH}/${BUILD_LOG_PATH} \"
-                sh "-buildTarget ${BUILD_PLATFORM} \"
-                sh "-executeMethod App.Editor.Build.Build \"
-                sh "--outPath=${BUILD_BASE_PATH}/${BUILD_OUTPUT_PATH}"
+                sh "${BUILD_UNITY} -quit -batchmode -nographics \
+                    -projectPath ${BUILD_BASE_PATH}/${BUILD_SOURCE_PATH} \
+                    -logFile ${BUILD_BASE_PATH}/${BUILD_LOG_PATH} \
+                    -buildTarget ${BUILD_PLATFORM} \
+                    -executeMethod App.Editor.Build.DefaultBuilder.BuildMacDevelop \
+                    --outPath=${BUILD_BASE_PATH}/${BUILD_OUTPUT_PATH}"
                 echo "${Pack_Env}"
                 echo "${Pack_Version}"
             }
