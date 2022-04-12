@@ -16,6 +16,14 @@ namespace App.Editor.Build
         {
             //获取参数
             Dictionary<CommandLine, string> commandMap = GetArgs();
+            
+            Debug.Log("[DefaultBuilder]CommandLine start.");
+            foreach (var item in commandMap)
+            {
+                Debug.Log($"[DefaultBuilder]CommandLine: {item.Key}, {item.Value}");
+            }
+            Debug.Log("[DefaultBuilder]CommandLine end.");
+            
             //获取输出路径
             commandMap.TryGetValue(CommandLine.CustomOutputPath, out var outPath);
             //获取配置文件
@@ -37,33 +45,15 @@ namespace App.Editor.Build
         private static Dictionary<CommandLine, string> GetArgs()
         {
             Dictionary<CommandLine, string> argMap = new Dictionary<CommandLine, string>();
-
-            bool isDouble = false;
-            CommandLine doubleEnum = CommandLine.None;
+            
             bool isSingle = false;
             CommandLine singleEnum = CommandLine.None;
             
             //获取指令中的所有参数
             string[] args = System.Environment.GetCommandLineArgs();
-            Debug.Log("[DefaultBuilder]CommandLine start.");
-            foreach (var str in args)
-            {
-                Debug.Log($"{str}");
-            }
-            Debug.Log("[DefaultBuilder]CommandLine end.");
+            
             foreach (var arg in args)
             {
-                //如果是 "--" 指令
-                if (isDouble)
-                {
-                    //"--"指令后带等号
-                    int splitIndex = arg.IndexOf("=");
-                    argMap.Add(doubleEnum, arg.Substring(splitIndex + 1));
-                    
-                    isDouble = false;
-                    doubleEnum = CommandLine.None;
-                    continue;
-                }
                 //如果是 "-" 指令
                 if (isSingle)
                 {
@@ -74,20 +64,25 @@ namespace App.Editor.Build
                     continue;
                 }
                 
+                //如果是 "--" 指令
+                //"--"指令后带等号，所以不需要在下一行处理，本行处理即可
+                if (arg.StartsWith("--") && CommandLineEnumMap.CommandMap.ContainsKey(arg))
+                {
+                    
+                    int splitIndex = arg.IndexOf("=");
+                    CommandLineEnumMap.CommandMap.TryGetValue(arg, out var doubleEnum);
+                    argMap.Add(doubleEnum, arg.Substring(splitIndex + 1));
+                    
+                    continue;
+                }
+                
                 //非命令，跳过
                 if (!CommandLineEnumMap.CommandMap.ContainsKey(arg))
                 {
                     continue;
                 }
                 
-                //如果是 "--" 指令
-                if (arg.StartsWith("--"))
-                {
-                    isDouble = true;
-                    CommandLineEnumMap.CommandMap.TryGetValue(arg, out doubleEnum);
-                    continue;
-                }
-                //如果是 "-" 指令
+                //如果是 "-" 指令，下一行处理
                 if (arg.StartsWith("-"))
                 {
                     isSingle = true;
