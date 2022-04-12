@@ -1,0 +1,76 @@
+pipeline {
+    agent any 
+    
+    environment {
+        //打包环境
+        Pack_Env = "${env.Pack_Env}"
+        //打包版本-临时，未来通过项目设置
+        Pack_Version = "${env.Pack_Version}"
+        
+        //GITHUB路径
+        GITHUB_PATH = "git@github.com:Oceanisher/Unity-DNF.git"
+        //Unity安装目录及版本
+        BUILD_UNITY = "/Applications/Unity/Hub/Editor/2020.3.21f1/Unity.app/Contents/MacOS/Unity"
+        //项目根目录
+        BUILD_BASE_PATH = "/Users/oceanisher/.jenkins/workspace/Unity-DNF_Mac"
+        //项目在本地的目录
+        BUILD_SOURCE_PATH = "SourceCode"
+        //项目最终位置
+        BUILD_OUTPUT_PATH = "Output"
+        //打包日志位置
+        BUILD_LOG_PATH = "Log"
+        //项目打包平台
+        BUILD_PLATFORM = "OSXUniversal"
+    }
+    
+    stages {
+        //Github代码下载
+        stage('Github') { 
+            steps { 
+                //删除源码目录
+                sh "rm -r -f ${BUILD_SOURCE_PATH}"
+                sh "mkdir ${BUILD_SOURCE_PATH}"
+                //切换到SourceCode目录
+                dir("${BUILD_SOURCE_PATH}")
+                {
+                    //重新下载至指定目录，暂时不用sh方式，而是下面的checkout方式
+                    //sh "git clone ${GITHUB_PATH} ${BUILD_SOURCE_PATH}"
+                    //使用Jenkins自带工具下载、并使用credentials私钥,下载至指定目录
+                    checkout([$class: 'GitSCM', 
+                        branches: [[name: '*/master']],
+                        //新版的Jenkins的pipeline不再使用这个来下载到指定目录
+                        //extensions: [[$class: 'SparseCheckoutPaths', 
+                        //                sparseCheckoutPaths:[[$class:'SparseCheckoutPath', path:'SourceCode/']]]],
+                        userRemoteConfigs: [[credentialsId: 'Oceanisher', url: 'git@github.com:Oceanisher/Unity-DNF.git']]
+                    ])
+                }
+            }
+        }
+        //项目构建
+        stage('Build') { 
+            steps {
+                //使用Unity命令构建 
+                sh "${BUILD_UNITY} -quit -batchmode -nographics \"
+                sh "-projectPath ${BUILD_BASE_PATH}/${BUILD_SOURCE_PATH} \"
+                sh "-logFile ${BUILD_BASE_PATH}/${BUILD_LOG_PATH} \"
+                sh "-buildTarget ${BUILD_PLATFORM} \"
+                sh "-executeMethod App.Editor.Build.Build \"
+                sh "--outPath=${BUILD_BASE_PATH}/${BUILD_OUTPUT_PATH}"
+                echo "${Pack_Env}"
+                echo "${Pack_Version}"
+            }
+        }
+        stage('Test') { 
+            steps {
+                // 
+                echo "暂时跳过"
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                // 
+                echo "暂时跳过"
+            }
+        }
+    }
+}

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Sys.Config
 {
     //输入配置
-    [CreateAssetMenu(menuName = "Config/InputNew", fileName = "KeyMapSo")]
+    [CreateAssetMenu(menuName = "Config/Sys/InputNew", fileName = "KeyMapSo")]
     [Serializable]
     public class InputSo : ScriptableObject
     {
