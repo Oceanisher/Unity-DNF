@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using App.Config;
+using App.Editor.Build.Tools;
 using Tools;
 using UnityEditor;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace App.Editor.Build
             //获取输出路径
             commandMap.TryGetValue(CommandLine.CustomOutputPath, out var outPath);
             //获取配置文件
-            AppConfigSo config = ResourceUtil.GetAppConfig(BuildTarget.StandaloneOSX);
+            AppConfigSo config = EditorResourceUtil.GetAppConfig(BuildTarget.StandaloneOSX);
 
             //配置版本
             PlayerSettings.bundleVersion = config.appVersion;
