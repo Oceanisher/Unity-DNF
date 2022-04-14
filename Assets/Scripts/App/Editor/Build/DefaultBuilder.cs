@@ -66,13 +66,19 @@ namespace App.Editor.Build
                 
                 //如果是 "--" 指令
                 //"--"指令后带等号，所以不需要在下一行处理，本行处理即可
-                if (arg.StartsWith("--") && CommandLineEnumMap.CommandMap.ContainsKey(arg))
+                if (arg.StartsWith("--"))
                 {
-                    
+                    //判断是否有匹配的指令
                     int splitIndex = arg.IndexOf("=");
-                    CommandLineEnumMap.CommandMap.TryGetValue(arg, out var doubleEnum);
-                    argMap.Add(doubleEnum, arg.Substring(splitIndex + 1));
+                    string command = arg.Substring(0, splitIndex);
+                    string value = arg.Substring(splitIndex + 1);
+                    if (!CommandLineEnumMap.CommandMap.ContainsKey(command))
+                    {
+                        continue;
+                    }
                     
+                    CommandLineEnumMap.CommandMap.TryGetValue(command, out var doubleEnum);
+                    argMap.Add(doubleEnum, value);
                     continue;
                 }
                 
