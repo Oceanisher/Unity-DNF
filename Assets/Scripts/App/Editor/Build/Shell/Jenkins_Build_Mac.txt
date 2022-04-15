@@ -55,7 +55,8 @@ pipeline {
                     -logFile ${BUILD_BASE_PATH}/${BUILD_LOG_PATH} \
                     -buildTarget ${BUILD_PLATFORM} \
                     -executeMethod App.Editor.Build.DefaultBuilder.BuildMacDevelop \
-                    --outPath=${BUILD_BASE_PATH}/${BUILD_OUTPUT_PATH}"
+                    --outPath=${BUILD_BASE_PATH}/${BUILD_OUTPUT_PATH} \
+                    --packEnv=${Pack_Env}"
                 echo "${Pack_Env}"
                 echo "${Pack_Version}"
             }
